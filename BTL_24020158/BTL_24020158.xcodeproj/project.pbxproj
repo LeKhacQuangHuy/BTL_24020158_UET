@@ -6,8 +6,32 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		BA9679FC2D5C77C60036BA83 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA9679FA2D5C77C60036BA83 /* SDL2.framework */; };
+		BA9679FD2D5C77C60036BA83 /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BA9679FA2D5C77C60036BA83 /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BA9679FE2D5C77C60036BA83 /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA9679FB2D5C77C60036BA83 /* SDL2_image.framework */; };
+		BA9679FF2D5C77C60036BA83 /* SDL2_image.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BA9679FB2D5C77C60036BA83 /* SDL2_image.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BA967A002D5C77C60036BA83 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				BA9679FD2D5C77C60036BA83 /* SDL2.framework in Embed Frameworks */,
+				BA9679FF2D5C77C60036BA83 /* SDL2_image.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		BA9679BF2D5C75B90036BA83 /* BTL_24020158.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BTL_24020158.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA9679FA2D5C77C60036BA83 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
+		BA9679FB2D5C77C60036BA83 /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = ../../../../../../Library/Frameworks/SDL2_image.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -23,6 +47,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA9679FC2D5C77C60036BA83 /* SDL2.framework in Frameworks */,
+				BA9679FE2D5C77C60036BA83 /* SDL2_image.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				BA9679C12D5C75B90036BA83 /* BTL_24020158 */,
+				BA9679F92D5C77C50036BA83 /* Frameworks */,
 				BA9679C02D5C75B90036BA83 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -45,6 +72,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		BA9679F92D5C77C50036BA83 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BA9679FA2D5C77C60036BA83 /* SDL2.framework */,
+				BA9679FB2D5C77C60036BA83 /* SDL2_image.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -55,6 +91,7 @@
 				BA9679BB2D5C75B90036BA83 /* Sources */,
 				BA9679BC2D5C75B90036BA83 /* Frameworks */,
 				BA9679BD2D5C75B90036BA83 /* Resources */,
+				BA967A002D5C77C60036BA83 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -250,6 +287,10 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = G69S88F6Y4;
 				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainNibFile = MainMenu;
@@ -276,6 +317,10 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = G69S88F6Y4;
 				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainNibFile = MainMenu;
