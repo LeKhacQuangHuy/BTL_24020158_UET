@@ -51,8 +51,20 @@ int main(){
                 player.dx = 0;
                 player.dy = 0;
             }
-        }
             
+        }
+        if (player.rect.x <0 && player.dx <0 ){
+            player.dx=0;
+        }
+        if (player.rect.x > 640*2-50 && player.dx >0 ){
+            player.dx=0;
+        }
+        if (player.rect.y <0 && player.dy <0 ){
+            player.dy=0;
+        }
+        if (player.rect.y > 480*2-50 && player.dy >0 ){
+            player.dy=0;
+        }
         player.move();
         
         SDL_SetRenderDrawColor(render, 0, 0, 0, 255);
