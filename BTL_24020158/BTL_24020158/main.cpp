@@ -3,8 +3,14 @@
 using namespace std;
 struct object{
     SDL_Rect rect;
-    int dx,dy;
+    int dx = 0,dy = 0;
+    void move(){
+        rect.x+=dx;
+        rect.y+=dy;
+    }
 };
+int playerspeed = 5;
+int enemiesspeed = 2;
 
 int main(){
     SDL_INIT_VIDEO;
@@ -15,6 +21,9 @@ int main(){
     vector <object> enemies;
     vector <object>::iterator it;
     
+    object player;
+    player.rect = {640 , 480 , 50 , 50};
+    srand(time(0));
     // chua co code xoa sau khi ra khoi man hinh
     bool running = true;
     SDL_Event event;
@@ -23,11 +32,35 @@ int main(){
             if (event.type == SDL_QUIT){
                 running = false;
             }
+            if (event.type == SDL_KEYDOWN){
+                if (event.key.keysym.sym == SDLK_UP){
+                    player.dy = -playerspeed;
+                }
+                if (event.key.keysym.sym == SDLK_DOWN){
+                    player.dy = playerspeed;
+                }
+                if (event.key.keysym.sym == SDLK_RIGHT){
+                    player.dx = playerspeed;
+                }
+                if (event.key.keysym.sym == SDLK_LEFT){
+                    player.dx = -playerspeed;
+                }
+                
+            }
+            if (event.type == SDL_KEYUP){
+                player.dx = 0;
+                player.dy = 0;
+            }
         }
+            
+        player.move();
+        
         SDL_SetRenderDrawColor(render, 0, 0, 0, 255);
         SDL_RenderClear(render);
         
 //           if (enemies.rect.y > 480*2) {enemies.rect.y=0;};
+        SDL_SetRenderDrawColor(render, 216, 249, 10, 1);
+        SDL_RenderFillRect(render, &player.rect);
         
         if (rand()%30 == 5){  // Sinh ngẫu nhiên enemies
             object doithu;
