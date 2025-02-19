@@ -12,6 +12,10 @@ struct object{
 int playerspeed = 5;
 int enemiesspeed = 2;
 
+bool checkCollision(SDL_Rect a, SDL_Rect b) {
+    return SDL_HasIntersection(&a, &b);
+}
+
 int main(){
     SDL_INIT_VIDEO;
     SDL_Window* window = nullptr;
@@ -20,9 +24,13 @@ int main(){
     
     vector <object> enemies;
     vector <object>::iterator it;
+    vector <object> bullets;
+    vector <object>::iterator it2;
     
     object player;
     player.rect = {640 , 480 , 50 , 50};
+//    object* mark;
+    
     srand(time(0));
     // chua co code xoa sau khi ra khoi man hinh
     bool running = true;
@@ -44,6 +52,10 @@ int main(){
                 }
                 if (event.key.keysym.sym == SDLK_LEFT){
                     player.dx = -playerspeed;
+                }
+                if (event.key.keysym.sym == SDLK_SPACE){
+                    object ex_bullet = {player.rect.x + 23 , player.rect.y , 10 , 10};
+                    bullets.push_back(ex_bullet);
                 }
                 
             }
@@ -85,7 +97,33 @@ int main(){
             SDL_RenderFillRect(render, &it->rect);
             if (it->rect.y>480*2) { enemies.erase(it);};
         }
-
+        SDL_SetRenderDrawColor(render, 255, 126, 0, 1);
+        for (it2=bullets.begin(); it2!=bullets.end(); it2++){
+            it2->rect.y-=2;   // Chỉnh tốc độ của bullets
+            SDL_RenderFillRect(render, &it2->rect);
+            if (it2->rect.y<0) { bullets.erase(it2);};
+        }
+        
+        
+        for (it2 = bullets.begin(); it2!=bullets.end(); ){
+            bool chek = true;
+            for (it = enemies.begin(); it!=enemies.end(); ){
+                if (SDL_HasIntersection(&it->rect, &it2->rect)){
+                    it = enemies.erase(it);
+                    it2 = bullets.erase(it2);
+                    chek=false;
+                    break;
+                }
+                else {
+                    ++it;
+                }
+            }
+            if (chek) {
+                ++it2;
+            }
+        }
+        
+        
         
     
                 
