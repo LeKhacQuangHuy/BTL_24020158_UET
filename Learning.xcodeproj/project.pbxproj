@@ -6,12 +6,44 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		BA89878C2D71865700D28876 /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA8987882D71865700D28876 /* SDL2_ttf.framework */; };
+		BA89878D2D71865700D28876 /* SDL2_ttf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BA8987882D71865700D28876 /* SDL2_ttf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BA89878E2D71865700D28876 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA8987892D71865700D28876 /* SDL2.framework */; };
+		BA89878F2D71865700D28876 /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BA8987892D71865700D28876 /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BA8987902D71865700D28876 /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA89878A2D71865700D28876 /* SDL2_image.framework */; };
+		BA8987912D71865700D28876 /* SDL2_image.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BA89878A2D71865700D28876 /* SDL2_image.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BA8987922D71865700D28876 /* SDL2_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA89878B2D71865700D28876 /* SDL2_mixer.framework */; };
+		BA8987932D71865700D28876 /* SDL2_mixer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BA89878B2D71865700D28876 /* SDL2_mixer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BA8987942D71865700D28876 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				BA8987912D71865700D28876 /* SDL2_image.framework in Embed Frameworks */,
+				BA8987932D71865700D28876 /* SDL2_mixer.framework in Embed Frameworks */,
+				BA89878D2D71865700D28876 /* SDL2_ttf.framework in Embed Frameworks */,
+				BA89878F2D71865700D28876 /* SDL2.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		BA8987742D71860600D28876 /* Learning.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Learning.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA8987882D71865700D28876 /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = ../../../../../Library/Frameworks/SDL2_ttf.framework; sourceTree = "<group>"; };
+		BA8987892D71865700D28876 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
+		BA89878A2D71865700D28876 /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = ../../../../../Library/Frameworks/SDL2_image.framework; sourceTree = "<group>"; };
+		BA89878B2D71865700D28876 /* SDL2_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_mixer.framework; path = ../../../../../Library/Frameworks/SDL2_mixer.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		BA8987762D71860600D28876 /* Learning */ = {
+		BA89882D2D72C73600D28876 /* Learning */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Learning;
 			sourceTree = "<group>";
@@ -23,6 +55,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA8987902D71865700D28876 /* SDL2_image.framework in Frameworks */,
+				BA8987922D71865700D28876 /* SDL2_mixer.framework in Frameworks */,
+				BA89878C2D71865700D28876 /* SDL2_ttf.framework in Frameworks */,
+				BA89878E2D71865700D28876 /* SDL2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -32,7 +68,8 @@
 		BA89876B2D71860600D28876 = {
 			isa = PBXGroup;
 			children = (
-				BA8987762D71860600D28876 /* Learning */,
+				BA89882D2D72C73600D28876 /* Learning */,
+				BA8987872D71865700D28876 /* Frameworks */,
 				BA8987752D71860600D28876 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -45,6 +82,17 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		BA8987872D71865700D28876 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BA8987892D71865700D28876 /* SDL2.framework */,
+				BA89878A2D71865700D28876 /* SDL2_image.framework */,
+				BA89878B2D71865700D28876 /* SDL2_mixer.framework */,
+				BA8987882D71865700D28876 /* SDL2_ttf.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -55,13 +103,14 @@
 				BA8987702D71860600D28876 /* Sources */,
 				BA8987712D71860600D28876 /* Frameworks */,
 				BA8987722D71860600D28876 /* Resources */,
+				BA8987942D71865700D28876 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				BA8987762D71860600D28876 /* Learning */,
+				BA89882D2D72C73600D28876 /* Learning */,
 			);
 			name = Learning;
 			packageProductDependencies = (
@@ -81,6 +130,7 @@
 				TargetAttributes = {
 					BA8987732D71860600D28876 = {
 						CreatedOnToolsVersion = 16.2;
+						LastSwiftMigration = 1620;
 					};
 				};
 			};
@@ -244,12 +294,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Learning/Learning.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = G69S88F6Y4;
 				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainNibFile = MainMenu;
@@ -262,6 +317,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "Huy-Le.Learning";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Learning/Learning-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
@@ -270,12 +328,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Learning/Learning.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = G69S88F6Y4;
 				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainNibFile = MainMenu;
@@ -288,6 +351,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "Huy-Le.Learning";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Learning/Learning-Bridging-Header.h";
+				SWIFT_VERSION = 6.0;
 			};
 			name = Release;
 		};
