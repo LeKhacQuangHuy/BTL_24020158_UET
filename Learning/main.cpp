@@ -1,11 +1,21 @@
 //  Created by Huy Le's Macbook on 28/2/25.
 #include "GameBase.h"
 #include "GameUltis.h"
+#include "LTexture.h"
 using namespace std;
 
 SDL_Window *gWindow = nullptr;
 SDL_Renderer *gRenderer = nullptr;
-SDL_Texture *gTexture = nullptr;
+//TTF_Font* gFont = nullptr;
+
+SDL_Texture* background_texture;
+SDL_Texture* highscore_texture;
+SDL_Texture* yourscore_texture;
+
+SDL_Rect highscore_rect;
+SDL_Rect yourscore_rect;
+
+LTexture gLoader;
 
 
 int main(){
@@ -30,19 +40,29 @@ int main(){
                     }
                 }
                 
+                SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
+                SDL_RenderClear(gRenderer);
                 
                 
-                //Clear screen
-                SDL_RenderClear( gRenderer );
                 
-                //Render texture to screen
-                SDL_RenderCopy(gRenderer, gTexture, NULL, NULL);
+                SDL_RenderCopy(gRenderer, background_texture, NULL, NULL);
                 
-                //Update screen
+                //Render highscore
+                highscore_rect = gLoader.create_text_rect(highscore_texture, HIGH_SCORE_X, HIGH_SCORE_Y);
+                SDL_RenderCopy(gRenderer, highscore_texture, NULL, &highscore_rect);
+                
+                //Render yourscore
+                yourscore_rect = gLoader.create_text_rect(yourscore_texture, HIGH_SCORE_X, HIGH_SCORE_Y + HIGH_YOUR_SCORE_SPACE );
+                
+                SDL_RenderCopy(gRenderer, yourscore_texture, NULL, &yourscore_rect);
                 SDL_RenderPresent(gRenderer);
-                SDL_Delay(30);
-            }
+                
             
+                SDL_Delay(30);
+                
+            }
+                
+   
             
             
             close();
@@ -76,57 +96,48 @@ bool init(){
         cout << "Can't create renderer" << SDL_GetError();
         success = false;
     } else
-    {
-        //Initialize renderer color
-    SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-
-    //Initialize PNG loading
-    int imgFlags = IMG_INIT_PNG;
-        
-        if( !( IMG_Init( imgFlags ) & imgFlags ) )
         {
-            printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
-            success = false;
+        //Initialize renderer color
+        SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+
+        //Initialize PNG loading
+        int imgFlags = IMG_INIT_PNG;
+        
+            if (TTF_Init() < 0){
+                cout << "Could not initalize text" << TTF_GetError();
+                success = false;
+            }
+            
+            if( !( IMG_Init( imgFlags ) & imgFlags ) )
+                {
+                printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
+                success = false;
+                }
         }
-    }
-    
+
     return success;
 }
 
-SDL_Texture* loadTexture( std::string path )
-{
-    //The final texture
-    SDL_Texture* newTexture = NULL;
 
-    //Load image at specified path
-    SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
-    if( loadedSurface == NULL )
-    {
-        printf( "Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError() );
-    }
-    else
-    {
-        //Create texture from surface pixels
-        newTexture = SDL_CreateTextureFromSurface( gRenderer, loadedSurface );
-        if( newTexture == NULL )
-        {
-            printf( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
-        }
 
-        //Get rid of old loaded surface
-        SDL_FreeSurface( loadedSurface );
-    }
-
-    return newTexture;
-}
 
 bool loadmedia(){
     bool success = true;
     //Load PNG texture
-    gTexture = loadTexture( "src/background.png" );
-    if( gTexture == NULL )
+    background_texture = gLoader.load_pic_from_file("src/background.png", gRenderer);
+    if(background_texture == NULL )
     {
         printf( "Failed to load texture image!\n" );
+        success = false;
+    }
+    highscore_texture = gLoader.load_text("font/pixel_font.ttf", "High score: ", gRenderer);
+    if (highscore_texture == NULL){
+        cout << "Failed to load high score texture";
+        success = false;
+    }
+    yourscore_texture = gLoader.load_text("font/pixel_font.ttf", "Your score: ", gRenderer);
+    if (yourscore_texture == NULL){
+        cout << "Failed to load your score texture";
         success = false;
     }
     return success;
@@ -135,9 +146,10 @@ bool loadmedia(){
 void close()
 {
     //Free loaded image
-    SDL_DestroyTexture( gTexture );
-    gTexture = NULL;
-
+//    SDL_DestroyTexture( gTexture );
+//    gTexture = NULL;
+    gLoader.Free();
+    
     //Destroy window
     SDL_DestroyRenderer( gRenderer );
     SDL_DestroyWindow( gWindow );

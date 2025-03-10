@@ -13,6 +13,8 @@
 
 bool init();
 bool loadmedia();
-SDL_Texture* loadTexture( std::string path );
+//SDL_Texture* loadTexture( std::string path );
 void close();
+
+
 #endif /* GameUltis_h */

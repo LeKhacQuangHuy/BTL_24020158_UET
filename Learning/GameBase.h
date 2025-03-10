@@ -15,8 +15,14 @@
 #include <SDL2_mixer/SDL_mixer.h>
 #include <iostream>
 
+
+
 const int MAX_SCREEN_WEIGHT = 800;
 const int MAX_SCREEN_HEIGHT = 600;
+const int HIGH_SCORE_X = MAX_SCREEN_HEIGHT - 50;
+const int HIGH_SCORE_Y = 50;
+const int HIGH_YOUR_SCORE_SPACE = 50;
+
 
 const char GameName[] = "Learning";
 
