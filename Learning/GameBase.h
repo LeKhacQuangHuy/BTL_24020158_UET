@@ -22,10 +22,14 @@ const int MAX_SCREEN_HEIGHT = 600;
 const int HIGH_SCORE_X = MAX_SCREEN_HEIGHT - 50;
 const int HIGH_SCORE_Y = 50;
 const int HIGH_YOUR_SCORE_SPACE = 50;
-
+const int PLAYER_INIT_X = MAX_SCREEN_WEIGHT/2 - 148/2;
+const int PLAYER_INIT_Y = MAX_SCREEN_HEIGHT - 145 - 158/2;
+const int PLAYER_SPEED = 5;
+// player_hight = 158, player_width = 148
 
 const char GameName[] = "Learning";
-
-
-
+const char GameBackground_PATH[] = "src/background.png";
+const char Font_PATH[] = "font/pixel_font.ttf";
+const char Player_PATH[] = "src/player.png";
+const char ICON_PATH[] = "src/yellow.png";
 #endif /* GameBase_h */

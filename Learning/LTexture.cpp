@@ -6,29 +6,6 @@
 //
 
 #include "LTexture.h"
-LTexture::LTexture()
-{
-    mTexture = nullptr;
-
-    mWidth = 0;
-    mHeight = 0;
-}
-
-LTexture::~LTexture()
-{
-    Free();
-}
-
-void LTexture::Free()
-{
-    if (mTexture != nullptr)
-    {
-        SDL_DestroyTexture(mTexture);
-        mTexture = nullptr;
-        mWidth = 0;
-        mHeight = 0;
-    }
-}
 SDL_Texture* LTexture::load_pic_from_file(std::string FILE_PATH, SDL_Renderer* gRenderer){
     SDL_Texture* lTexture = nullptr;
     SDL_Surface* lSurface = IMG_Load(FILE_PATH.c_str());
@@ -62,7 +39,7 @@ SDL_Texture* LTexture::load_text(std::string TEXT_PATH, std::string TEXT2LOAD, S
     return lTexture;
 }
 
-SDL_Rect LTexture::create_text_rect(SDL_Texture* texture, int x, int y){
+SDL_Rect LTexture::create_rect(SDL_Texture* texture, int x, int y){
     int textWidth, textHeight;
     SDL_QueryTexture(texture, NULL, NULL, &textWidth, &textHeight);
     SDL_Rect textRect = { x, y, textWidth, textHeight };

@@ -15,6 +15,8 @@ bool init();
 bool loadmedia();
 //SDL_Texture* loadTexture( std::string path );
 void close();
-
+void draw_high_score();
+void draw_your_score();
+void draw_player();
 
 #endif /* GameUltis_h */
