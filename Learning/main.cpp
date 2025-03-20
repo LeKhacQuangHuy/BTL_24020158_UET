@@ -2,8 +2,8 @@
 #include "GameBase.h"
 #include "GameUltis.h"
 #include "LTexture.h"
-#include "GamePlayer.h"
-using namespace std;
+#include "GameObject.h"
+//using namespace std;
 
 SDL_Window *gWindow = nullptr;
 SDL_Renderer *gRenderer = nullptr;
@@ -18,10 +18,19 @@ SDL_Rect yourscore_rect;
 
 LTexture gLoader;
 
-
+Mix_Music* gMusic = nullptr;
+Mix_Chunk* gKeyboard = nullptr;
 const Uint8 * keystate = SDL_GetKeyboardState(nullptr);
 
 object player;
+object example_white_enemies;
+object example_yellow_enemies;
+
+enemies white_ene;
+enemies yellow_ene;
+
+using namespace std;
+
 int main(){
     if (!init()){
         cout << "Can't init" << SDL_GetError();
@@ -33,44 +42,16 @@ int main(){
         }
         
         else{
-
-
-
-    // Khởi tạo SDL và SDL_mixer
-    if (SDL_Init(SDL_INIT_AUDIO) < 0) {
-        std::cerr << "SDL could not initialize! SDL Error: " << SDL_GetError() << std::endl;
-        return -1;
-    }
-    
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-        std::cerr << "SDL_mixer could not initialize! Mix Error: " << Mix_GetError() << std::endl;
-        return -1;
-    }
-
-    // Tải nhạc (MP3, WAV, OGG, v.v.)
-    Mix_Music* music = Mix_LoadMUS("sound/bkgr_audio.wav");
-    if (!music) {
-        std::cerr << "Failed to load music! Mix Error: " << Mix_GetError() << std::endl;
-        return -1;
-    }
-
-    // Phát nhạc (-1 để lặp vô hạn, 0 để phát 1 lần)
-    Mix_PlayMusic(music, -1);
-
-    std::cout << "Press Enter to stop music..." << std::endl;
-//    std::cin.get(); // Đợi người dùng nhấn Enter
-
-
-
-            
             SDL_Event event;
             bool running = true;
+            Mix_PlayMusic(gMusic, -1);
             while (running){
                 while (SDL_PollEvent(&event)){
                     if (event.type == SDL_QUIT){
                         running = false;
                     }
                 }
+                
                 
                 
                 SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
@@ -86,10 +67,20 @@ int main(){
                 draw_your_score();
                 //Render player
                 player.update();
-//                SDL_RenderCopy(gRenderer, player.objectTexture, NULL, &player.objectRect);
                 SDL_RenderCopyEx(gRenderer, player.objectTexture, NULL, &player.objectRect, 0, NULL, player.flip);
+                //Render white enemies
+                if (getRandomNum(0, 30) == 0){
+                    white_ene.gen_new_enemies(2, example_white_enemies, gRenderer, WHITE_ENE_PATH);
+                }
+                white_ene.handle_white_enemies(player);
+                white_ene.render(example_white_enemies.objectTexture, gRenderer);
                 
-                
+                //Render yellow enemies
+                if (getRandomNum(0, 100) == 0){
+                    yellow_ene.gen_new_enemies(2, example_yellow_enemies, gRenderer, YELLOW_ENE_PATH);
+                }
+                yellow_ene.handle_yellow_enemies(player);
+                yellow_ene.render(example_white_enemies.objectTexture, gRenderer);
                 
                 SDL_RenderPresent(gRenderer);
                 
@@ -98,10 +89,9 @@ int main(){
                 
             }
                 
-   
             
-            Mix_FreeMusic(music);
-            Mix_CloseAudio();
+            
+            
             close();
             
         }
@@ -113,6 +103,9 @@ bool init(){
     if ( SDL_Init(SDL_INIT_EVERYTHING) < 0 ) {
         std::cout << "SDL Init Error!" << SDL_GetError();
         success = false;
+    }
+    if (SDL_Init(SDL_INIT_AUDIO) < 0){
+        cout << "AUDIO INIT ERROR!" << SDL_GetError();
     }
     else
     {
@@ -171,6 +164,16 @@ bool loadmedia(){
         printf( "Failed to load texture image!\n" );
         success = false;
     }
+    //Audio
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+    gMusic = Mix_LoadMUS("sound/bkgr_audio.wav");
+    if (!gMusic){
+        cout << "Failed to load background music" << Mix_GetError() << endl;
+        success = false;
+    }
+    gKeyboard = Mix_LoadWAV("sound/mouse_click.wav");
+    player.load_audio(gKeyboard);
+
     highscore_texture = gLoader.load_text(Font_PATH, "High score: ", gRenderer);
     if (highscore_texture == NULL){
         cout << "Failed to load high score texture" << endl;
@@ -181,7 +184,7 @@ bool loadmedia(){
         cout << "Failed to load your score texture" << endl;
         success = false;
     }
-    
+    //Player
     player.objectTexture = gLoader.load_pic_from_file(Player_PATH, gRenderer);
     player.x = PLAYER_INIT_X;
     player.y = PLAYER_INIT_Y;
@@ -190,14 +193,29 @@ bool loadmedia(){
         cout << "Failed to load your player texture" << IMG_GetError() << endl;
         success = false;
     }
+    //White enemies
+    example_white_enemies.objectTexture = gLoader.load_pic_from_file(WHITE_ENE_PATH, gRenderer);
+    if (example_white_enemies.objectTexture == NULL){
+        cout << "Failed to load your white enemies texture" << IMG_GetError() << endl;
+        success = false;
+    }
+    //Yellow enemies
+    example_yellow_enemies.objectTexture = gLoader.load_pic_from_file(YELLOW_ENE_PATH, gRenderer);
+    if (example_yellow_enemies.objectTexture == NULL){
+        cout << "Failed to load your yellow enemies texture" << IMG_GetError() << endl;
+        success = false;
+    }
+    
     return success;
     
 }
 void close()
 {
     //audio
-
     
+    Mix_FreeMusic(gMusic);
+    Mix_FreeChunk(gKeyboard);
+    Mix_CloseAudio();
     //Texture
     SDL_DestroyTexture(highscore_texture);
     SDL_DestroyTexture(yourscore_texture);
@@ -209,7 +227,7 @@ void close()
     gWindow = NULL;
     gRenderer = NULL;
 
-    //Quit SDL subsystems
+    //Quit SDL  subsystems
     IMG_Quit();
     SDL_Quit();
 }
