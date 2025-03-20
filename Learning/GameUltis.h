@@ -21,4 +21,5 @@ void draw_player();
 int getRandomNum(int a, int b);
 void renderIMG(SDL_Texture* texture, SDL_Renderer* gRenderer, SDL_Rect rect);
 bool checkCollision(SDL_Rect rect_a, SDL_Rect rect_b);
+void show_lose_screen(bool &play_Again);
 #endif /* GameUltis_h */

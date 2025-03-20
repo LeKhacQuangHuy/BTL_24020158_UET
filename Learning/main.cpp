@@ -42,61 +42,63 @@ int main(){
         }
         
         else{
-            SDL_Event event;
-            bool running = true;
-            Mix_PlayMusic(gMusic, -1);
-            while (running){
-                while (SDL_PollEvent(&event)){
-                    if (event.type == SDL_QUIT){
-                        running = false;
+            bool play_Again = true;
+                SDL_Event event;
+                bool running = true;
+                Mix_PlayMusic(gMusic, -1);
+                while (running){
+                    while (SDL_PollEvent(&event)){
+                        if (event.type == SDL_QUIT){
+                            running = false;
+                        }
+                    }
+                    
+                    
+                    
+                    SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
+                    SDL_RenderClear(gRenderer);
+                    
+                    
+                    
+                    SDL_RenderCopy(gRenderer, background_texture, NULL, NULL);
+                    
+                    //Render highscore
+                    draw_high_score();
+                    //Render yourscore
+                    draw_your_score();
+                    //Render player
+                    player.update();
+                    SDL_RenderCopyEx(gRenderer, player.objectTexture, NULL, &player.objectRect, 0, NULL, player.flip);
+                    //Render white enemies
+                    if (getRandomNum(0, 30) == 0){
+                        white_ene.gen_new_enemies(2, example_white_enemies, gRenderer, WHITE_ENE_PATH);
+                    }
+                    white_ene.handle_white_enemies(player);
+                    white_ene.render(example_white_enemies.objectTexture, gRenderer);
+                    
+                    //Render yellow enemies
+                    if (getRandomNum(0, 100) == 0){
+                        yellow_ene.gen_new_enemies(2, example_yellow_enemies, gRenderer, YELLOW_ENE_PATH);
+                    }
+                    if (yellow_ene.handle_yellow_enemies(player) == 0){
+                        yellow_ene.render(example_white_enemies.objectTexture, gRenderer);
+                        SDL_RenderPresent(gRenderer);
+                        SDL_Delay(20);
+                    }
+                    else {
+                        show_lose_screen(running);
+                        white_ene.reset();
+                        yellow_ene.reset();
+                        player.objectRect.x = PLAYER_INIT_X;
+                        player.objectRect.y = PLAYER_INIT_Y;
                     }
                 }
-                
-                
-                
-                SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
-                SDL_RenderClear(gRenderer);
-                
-                
-                
-                SDL_RenderCopy(gRenderer, background_texture, NULL, NULL);
-                
-                //Render highscore
-                draw_high_score();
-                //Render yourscore
-                draw_your_score();
-                //Render player
-                player.update();
-                SDL_RenderCopyEx(gRenderer, player.objectTexture, NULL, &player.objectRect, 0, NULL, player.flip);
-                //Render white enemies
-                if (getRandomNum(0, 30) == 0){
-                    white_ene.gen_new_enemies(2, example_white_enemies, gRenderer, WHITE_ENE_PATH);
-                }
-                white_ene.handle_white_enemies(player);
-                white_ene.render(example_white_enemies.objectTexture, gRenderer);
-                
-                //Render yellow enemies
-                if (getRandomNum(0, 100) == 0){
-                    yellow_ene.gen_new_enemies(2, example_yellow_enemies, gRenderer, YELLOW_ENE_PATH);
-                }
-                yellow_ene.handle_yellow_enemies(player);
-                yellow_ene.render(example_white_enemies.objectTexture, gRenderer);
-                
-                SDL_RenderPresent(gRenderer);
-                
-            
-                SDL_Delay(20);
-                
             }
-                
-            
-            
-            
-            close();
-            
-        }
-    }
-    return 0;
+                  
+            }
+    close();
+        return 0;
+    
 }
 bool init(){
     bool success = true;
@@ -239,6 +241,32 @@ void draw_your_score(){
     yourscore_rect = gLoader.create_rect(yourscore_texture, HIGH_SCORE_X, HIGH_SCORE_Y + HIGH_YOUR_SCORE_SPACE );
     SDL_RenderCopy(gRenderer, yourscore_texture, NULL, &yourscore_rect);
 }
-void draw_player(){
-
+void show_lose_screen(bool &play_Again){
+    SDL_Texture* lose_screeen = gLoader.load_text(Font_PATH, "DO YOU WANT TO PLAY AGAIN ?", gRenderer);
+    SDL_Rect lose_rect = gLoader.create_rect(lose_screeen, MAX_SCREEN_WEIGHT/2 - 300, MAX_SCREEN_HEIGHT/2);
+    SDL_Event e;
+    
+    bool running = true;
+    while (running){
+        while (SDL_PollEvent(&e)){
+            if (e.type == SDL_QUIT){
+                play_Again = false;
+                SDL_DestroyTexture(lose_screeen);
+                running = false;
+            }
+            if (e.type == SDL_KEYDOWN){
+                play_Again = true;
+                SDL_DestroyTexture(lose_screeen);
+                running = false;
+                
+            }
+        }
+        SDL_SetRenderDrawColor(gRenderer, 0,0,0,0);
+        SDL_RenderClear(gRenderer);
+        
+        SDL_RenderCopy(gRenderer, lose_screeen, NULL, &lose_rect);
+        
+        SDL_RenderPresent(gRenderer);
+        SDL_Delay(20);
+    }
 }

@@ -93,7 +93,7 @@ struct enemies{
                 ++it;
         }
     }
-    void handle_yellow_enemies(object player){
+    int handle_yellow_enemies(object player){
         //Yellow
         for (it = yellow_enemies.begin(); it != yellow_enemies.end();){
             it->objectRect.y+=2;   // Chỉnh tốc độ của enemies
@@ -103,8 +103,13 @@ struct enemies{
                 it = yellow_enemies.erase(it);
             } else
                 ++it;
+            if (checkCollision(player.objectRect, it->objectRect)){
+                return 1;
+            }
         }
+        return 0;
     }
+    
     
     
     void render(SDL_Texture* texture, SDL_Renderer* gRenderer){
@@ -115,7 +120,16 @@ struct enemies{
             renderIMG(it->objectTexture, gRenderer, it->objectRect);
         }
     }
-    
+    void reset(){
+        for (it = white_enemies.begin(); it != white_enemies.end(); ){
+            SDL_DestroyTexture(it->objectTexture);
+            it = white_enemies.erase(it);
+        }
+        for (it = yellow_enemies.begin(); it != yellow_enemies.end(); ){
+            SDL_DestroyTexture(it->objectTexture);
+            it = yellow_enemies.erase(it);
+        }
+    }
     
 };
 
