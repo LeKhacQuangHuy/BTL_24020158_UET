@@ -16,7 +16,7 @@ bool loadmedia();
 //SDL_Texture* loadTexture( std::string path );
 void close();
 void draw_high_score();
-void draw_your_score();
+void draw_your_score(int score);
 void draw_player();
 int getRandomNum(int a, int b);
 void renderIMG(SDL_Texture* texture, SDL_Renderer* gRenderer, SDL_Rect rect);

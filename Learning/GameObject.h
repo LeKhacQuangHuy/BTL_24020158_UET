@@ -81,33 +81,59 @@ struct enemies{
             
         }
     }
-    void handle_white_enemies(object player){
+    int handle_white_enemies(object player){
         //White
+        int res = 0;
+        bool chek1 = false;
+        bool chek2 = false;
         for (it = white_enemies.begin(); it != white_enemies.end();){
             it->objectRect.y+= ENEMIES_SPEED;   // Chỉnh tốc độ của enemies
-            if (it->objectRect.y > MAX_SCREEN_HEIGHT || checkCollision(player.objectRect, it->objectRect))
+            if (it->objectRect.y > MAX_SCREEN_HEIGHT)
             {
                 SDL_DestroyTexture(it->objectTexture);
                 it = white_enemies.erase(it);
-            } else
+                chek1 = true;
+            }
+            
+            if (checkCollision(player.objectRect, it->objectRect)){
+                res = 1;
+                SDL_DestroyTexture(it->objectTexture);
+                it = white_enemies.erase(it);
+                chek2 = true;
+            }
+            
+            if (chek1 == false && chek2 == false){
                 ++it;
+            }
+            
+            chek1 = false;
+            chek2 = false;
+            
         }
+        return res;
     }
+    
     int handle_yellow_enemies(object player){
         //Yellow
+        int res = 0;
+        bool chek1 = false;
         for (it = yellow_enemies.begin(); it != yellow_enemies.end();){
             it->objectRect.y+=2;   // Chỉnh tốc độ của enemies
             if (it->objectRect.y > MAX_SCREEN_HEIGHT)
             {
                 SDL_DestroyTexture(it->objectTexture);
                 it = yellow_enemies.erase(it);
-            } else
-                ++it;
-            if (checkCollision(player.objectRect, it->objectRect)){
-                return 1;
+                chek1 = true;
             }
+            if (checkCollision(player.objectRect, it->objectRect)){
+                res = 1;
+            }
+            if (chek1 == false){
+                ++it;
+            }
+            chek1 = false;
         }
-        return 0;
+        return res;
     }
     
     
