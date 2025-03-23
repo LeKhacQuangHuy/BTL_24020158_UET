@@ -114,6 +114,12 @@ struct enemies{
             
             if (checkCollision(player.objectRect, it->objectRect)){
                 res = 1;
+                Mix_FreeChunk(lChunk);
+                lChunk = Mix_LoadWAV("sound/mouse_click.wav");
+                if (lChunk == NULL){
+                    std::cout << "Failed to load chunk sound";
+                }
+                Mix_PlayChannel(-1, lChunk, 0);
                 SDL_DestroyTexture(it->objectTexture);
                 it = white_enemies.erase(it);
                 chek2 = true;
@@ -168,6 +174,12 @@ struct enemies{
             
             if (checkCollision(player.objectRect, it->objectRect)){
                 res = 1;
+                Mix_FreeChunk(lChunk);
+                lChunk = Mix_LoadWAV("sound/bonus_sound.wav");
+                if (lChunk == NULL){
+                    std::cout << "Failed to load chunk sound";
+                }
+                Mix_PlayChannel(0, lChunk, 0);
                 SDL_DestroyTexture(it->objectTexture);
                 it = boost_enemies.erase(it);
                 chek2 = true;
@@ -211,6 +223,10 @@ struct enemies{
         for (it = yellow_enemies.begin(); it != yellow_enemies.end(); ){
             SDL_DestroyTexture(it->objectTexture);
             it = yellow_enemies.erase(it);
+        }
+        for (it = boost_enemies.begin(); it != boost_enemies.end(); ){
+            SDL_DestroyTexture(it->objectTexture);
+            it = boost_enemies.erase(it);
         }
     }
     

@@ -55,15 +55,13 @@ int main(){
 //            bool play_Again = true;
                 SDL_Event event;
                 bool running = true;
-//                Mix_PlayMusic(gMusic, -1);
+                Mix_PlayMusic(gMusic, -1);
                 while (running){
                     while (SDL_PollEvent(&event)){
                         if (event.type == SDL_QUIT){
                             running = false;
                         }
                     }
-                    
-                    
                     
                     SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
                     SDL_RenderClear(gRenderer);
@@ -200,8 +198,8 @@ bool loadmedia(){
         cout << "Failed to load background music" << Mix_GetError() << endl;
         success = false;
     }
-    gKeyboard = Mix_LoadWAV("sound/mouse_click.wav");
-    player.load_audio(gKeyboard);
+//    gKeyboard = Mix_LoadWAV("sound/mouse_click.wav");
+//    player.load_audio(gKeyboard);
     //High score
     highscore_texture = gLoader.load_text(Font_PATH, "High score: ", gRenderer);
     highscore_rect = gLoader.create_rect(highscore_texture, HIGH_SCORE_X, HIGH_SCORE_Y);
@@ -263,7 +261,7 @@ void close()
     //audio
     
     Mix_FreeMusic(gMusic);
-    Mix_FreeChunk(gKeyboard);
+//    Mix_FreeChunk(gKeyboard);
     Mix_CloseAudio();
     //Texture
     SDL_DestroyTexture(highscore_texture);

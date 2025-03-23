@@ -21,11 +21,11 @@
 
 const int MAX_SCREEN_WEIGHT = 800;
 const int MAX_SCREEN_HEIGHT = 600;
-const int HIGH_SCORE_X = MAX_SCREEN_HEIGHT - 50;
+const int HIGH_SCORE_X = MAX_SCREEN_HEIGHT - 60;
 const int HIGH_SCORE_Y = 50;
 const int HIGH_YOUR_SCORE_SPACE = 50;
 const int PLAYER_INIT_X = MAX_SCREEN_WEIGHT/2 - 148/2;
-const int PLAYER_INIT_Y = MAX_SCREEN_HEIGHT - 145 - 158/2;
+const int PLAYER_INIT_Y = MAX_SCREEN_HEIGHT - 145 - 158/2 + 30;
 const int PLAYER_SPEED = 5;
 const int ENEMIES_SPEED = 2;
 const int Enemies_gen_num = 5;
