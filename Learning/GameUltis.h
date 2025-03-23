@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include "GameBase.h"
 
+static int handle_delay_num = 0;
+
 bool init();
 bool loadmedia();
 //SDL_Texture* loadTexture( std::string path );
@@ -22,4 +24,6 @@ int getRandomNum(int a, int b);
 void renderIMG(SDL_Texture* texture, SDL_Renderer* gRenderer, SDL_Rect rect);
 bool checkCollision(SDL_Rect rect_a, SDL_Rect rect_b);
 void show_lose_screen(bool &play_Again);
+void show_bonus_score(int x, int y);
+bool handle_delay_action(Uint32 start_time, int time);
 #endif /* GameUltis_h */

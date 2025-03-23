@@ -29,6 +29,7 @@ const int PLAYER_INIT_Y = MAX_SCREEN_HEIGHT - 145 - 158/2;
 const int PLAYER_SPEED = 5;
 const int ENEMIES_SPEED = 2;
 const int Enemies_gen_num = 5;
+const int BOOST_ENE_SPEED = 8;
 // player_hight = 158, player_width = 148
 
 const char GameName[] = "Learning";
@@ -38,6 +39,7 @@ const char Player_PATH[] = "src/player.png";
 const char WHITE_ENE_PATH[] = "src/white.png";
 const char YELLOW_ENE_PATH[] = "src/yellow.png";
 const char ICON_PATH[] = "src/yellow.png";
+const char BOOST_ENE_PATH[] = "src/boost.png";
 
 
 #endif /* GameBase_h */

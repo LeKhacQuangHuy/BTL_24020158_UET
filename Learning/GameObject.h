@@ -59,6 +59,7 @@ struct object{
 
 static std::vector <object> white_enemies;
 static std::vector <object> yellow_enemies;
+static std::vector <object> boost_enemies;
 static std::vector <object>::iterator it;
 
 static LTexture lLoader;
@@ -71,12 +72,28 @@ struct enemies{
             if (pic_PATH.find("white") != std::string::npos){
                 white_enemies.push_back(std::move(enemy_type));
                 white_enemies.back().objectTexture = lLoader.load_pic_from_file(pic_PATH, gRenderer);
+                if (white_enemies.back().objectTexture == NULL){
+                    std::cout << "Can't load white enemies" << std::endl;
+                }
                 white_enemies.back().objectRect = lLoader.create_rect(white_enemies.back().objectTexture, init_x, init_y);
             }
-            else{
+            if (pic_PATH.find("yellow") != std::string::npos){
                 yellow_enemies.push_back(std::move(enemy_type));
                 yellow_enemies.back().objectTexture = lLoader.load_pic_from_file(pic_PATH, gRenderer);
+                if (yellow_enemies.back().objectTexture == NULL){
+                    std::cout << "Can't load yellow enemies" << std::endl;
+                }
                 yellow_enemies.back().objectRect = lLoader.create_rect(yellow_enemies.back().objectTexture, init_x, init_y);
+            }
+            if (pic_PATH.find("boost") != std::string::npos){
+                boost_enemies.push_back(std::move(enemy_type));
+                boost_enemies.back().objectTexture = lLoader.load_pic_from_file(pic_PATH, gRenderer);
+                if (boost_enemies.back().objectTexture == NULL){
+                    std::cout << "Can't load boost enemies" << std::endl;
+                }
+                boost_enemies.back().objectRect = lLoader.create_rect(boost_enemies.back().objectTexture, init_x, init_y);
+                boost_enemies.back().objectRect.w *= 0.6;
+                boost_enemies.back().objectRect.h *= 0.6;
             }
             
         }
@@ -135,16 +152,56 @@ struct enemies{
         }
         return res;
     }
-    
-    
-    
-    void render(SDL_Texture* texture, SDL_Renderer* gRenderer){
-        for (it = white_enemies.begin(); it != white_enemies.end(); ++it){
-            SDL_RenderCopy(gRenderer, it->objectTexture, NULL, &it->objectRect);
+    int handle_boost_enemies(object player){
+        //White
+        int res = 0;
+        bool chek1 = false;
+        bool chek2 = false;
+        for (it = boost_enemies.begin(); it != boost_enemies.end();){
+            it->objectRect.y+= BOOST_ENE_SPEED;   // Chỉnh tốc độ của enemies
+            if (it->objectRect.y > MAX_SCREEN_HEIGHT)
+            {
+                SDL_DestroyTexture(it->objectTexture);
+                it = boost_enemies.erase(it);
+                chek1 = true;
+            }
+            
+            if (checkCollision(player.objectRect, it->objectRect)){
+                res = 1;
+                SDL_DestroyTexture(it->objectTexture);
+                it = boost_enemies.erase(it);
+                chek2 = true;
+            }
+            
+            if (chek1 == false && chek2 == false){
+                ++it;
+            }
+            
+            chek1 = false;
+            chek2 = false;
+            
         }
-        for (it = yellow_enemies.begin(); it != yellow_enemies.end(); ++it){
-            renderIMG(it->objectTexture, gRenderer, it->objectRect);
+        return res;
+    }
+    
+    
+    void render(SDL_Texture* texture, SDL_Renderer* gRenderer, std::string OBJECT_TO_RENDER){
+        if (OBJECT_TO_RENDER.find("white") != std::string::npos){
+            for (it = white_enemies.begin(); it != white_enemies.end(); ++it){
+                SDL_RenderCopy(gRenderer, it->objectTexture, NULL, &it->objectRect);
+            }
         }
+        if (OBJECT_TO_RENDER.find("yellow") != std::string::npos){
+            for (it = yellow_enemies.begin(); it != yellow_enemies.end(); ++it){
+                renderIMG(it->objectTexture, gRenderer, it->objectRect);
+            }
+        }
+        if (OBJECT_TO_RENDER.find("boost") != std::string::npos){
+            for (it = boost_enemies.begin(); it != boost_enemies.end(); ++it){
+                renderIMG(it->objectTexture, gRenderer, it->objectRect);
+            }
+        }
+        
     }
     void reset(){
         for (it = white_enemies.begin(); it != white_enemies.end(); ){
@@ -158,5 +215,7 @@ struct enemies{
     }
     
 };
+
+
 
 #endif /* GameObject_h */

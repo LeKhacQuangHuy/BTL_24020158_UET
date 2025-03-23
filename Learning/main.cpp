@@ -13,10 +13,12 @@ SDL_Texture* background_texture;
 SDL_Texture* highscore_texture;
 SDL_Texture* yourscore_texture;
 SDL_Texture* yourscore_num_texture;
+SDL_Texture* bonus_score_texture;
 
 SDL_Rect highscore_rect;
 SDL_Rect yourscore_rect;
 SDL_Rect yourscore_num_rect;
+SDL_Rect bonus_score_rect;
 
 LTexture gLoader;
 
@@ -27,13 +29,16 @@ const Uint8 * keystate = SDL_GetKeyboardState(nullptr);
 object player;
 object example_white_enemies;
 object example_yellow_enemies;
+object example_boost_enemies;
 
 enemies white_ene;
 enemies yellow_ene;
+enemies boost_ene;
 
 int your_score = 0;
 int high_score = 0;
 
+Uint32 handle_bonus_delay_time;
 using namespace std;
 
 int main(){
@@ -47,10 +52,10 @@ int main(){
         }
         
         else{
-            bool play_Again = true;
+//            bool play_Again = true;
                 SDL_Event event;
                 bool running = true;
-                Mix_PlayMusic(gMusic, -1);
+//                Mix_PlayMusic(gMusic, -1);
                 while (running){
                     while (SDL_PollEvent(&event)){
                         if (event.type == SDL_QUIT){
@@ -84,14 +89,26 @@ int main(){
                         your_score += 1;
                     }
                     
-                    white_ene.render(example_white_enemies.objectTexture, gRenderer);
+                    white_ene.render(example_white_enemies.objectTexture, gRenderer, WHITE_ENE_PATH);
+                    //Render boost enemies
+                    if (getRandomNum(0, 100) == 0){
+                        boost_ene.gen_new_enemies(3, example_boost_enemies, gRenderer, BOOST_ENE_PATH);
+                    }
+                    if (boost_ene.handle_boost_enemies(player) == 1){
+                        your_score += 5;
+                        handle_bonus_delay_time = SDL_GetTicks();
+                    }
+                    if (handle_delay_action(handle_bonus_delay_time, 3) == true){
+                        show_bonus_score(player.objectRect.x, player.objectRect.y);
+                    }
+                    boost_ene.render(example_boost_enemies.objectTexture, gRenderer, BOOST_ENE_PATH);
                     
                     //Render yellow enemies
                     if (getRandomNum(0, 100) == 0){
                         yellow_ene.gen_new_enemies(2, example_yellow_enemies, gRenderer, YELLOW_ENE_PATH);
                     }
                     if (yellow_ene.handle_yellow_enemies(player) == 0){
-                        yellow_ene.render(example_white_enemies.objectTexture, gRenderer);
+                        yellow_ene.render(example_white_enemies.objectTexture, gRenderer, YELLOW_ENE_PATH);
                         SDL_RenderPresent(gRenderer);
                         SDL_Delay(20);
                     }
@@ -105,8 +122,7 @@ int main(){
                     }
                 }
             }
-                  
-            }
+        }
     close();
         return 0;
     
@@ -188,17 +204,19 @@ bool loadmedia(){
     player.load_audio(gKeyboard);
     //High score
     highscore_texture = gLoader.load_text(Font_PATH, "High score: ", gRenderer);
+    highscore_rect = gLoader.create_rect(highscore_texture, HIGH_SCORE_X, HIGH_SCORE_Y);
     if (highscore_texture == NULL){
         cout << "Failed to load high score texture" << endl;
         success = false;
     }
     //Your score
-    yourscore_texture = gLoader.load_text("font/pixel_font.ttf", "Your score: ", gRenderer);
+    yourscore_texture = gLoader.load_text(Font_PATH, "Your score: ", gRenderer);
     if (yourscore_texture == NULL){
         cout << "Failed to load your score texture" << endl;
         success = false;
     }
     yourscore_num_texture = gLoader.load_text("font/pixel_font.ttf", to_string(your_score) , gRenderer);
+    yourscore_rect = gLoader.create_rect(yourscore_texture, HIGH_SCORE_X, HIGH_SCORE_Y + HIGH_YOUR_SCORE_SPACE );
     if (yourscore_texture == NULL){
         cout << "Failed to load your score texture" << endl;
         success = false;
@@ -225,7 +243,18 @@ bool loadmedia(){
         cout << "Failed to load your yellow enemies texture" << IMG_GetError() << endl;
         success = false;
     }
-    
+    //Boost enemies
+    example_boost_enemies.objectTexture = gLoader.load_pic_from_file(BOOST_ENE_PATH, gRenderer);
+    if (example_boost_enemies.objectTexture == NULL){
+        cout << "Failed to load your boost enemies texture" << IMG_GetError() << endl;
+        success = false;
+    }
+    //Bonus
+    bonus_score_texture = gLoader.load_text(Font_PATH, "+5", gRenderer);
+    if (bonus_score_texture == NULL){
+        cout << "Failed to load your boost enemies texture" << IMG_GetError() << endl;
+        success = false;
+    }
     return success;
     
 }
@@ -252,15 +281,18 @@ void close()
     SDL_Quit();
 }
 void draw_high_score(){
-    highscore_rect = gLoader.create_rect(highscore_texture, HIGH_SCORE_X, HIGH_SCORE_Y);
     SDL_RenderCopy(gRenderer, highscore_texture, NULL, &highscore_rect);
 }
 void draw_your_score(int score){
-    yourscore_rect = gLoader.create_rect(yourscore_texture, HIGH_SCORE_X, HIGH_SCORE_Y + HIGH_YOUR_SCORE_SPACE );
-    SDL_RenderCopy(gRenderer, yourscore_texture, NULL, &yourscore_rect);
     
-    yourscore_num_texture = gLoader.load_text("font/pixel_font.ttf", to_string(your_score) , gRenderer);
-    yourscore_num_rect = gLoader.create_rect(yourscore_num_texture,HIGH_SCORE_X + yourscore_rect.w + 3 , HIGH_SCORE_Y + HIGH_YOUR_SCORE_SPACE);
+            SDL_DestroyTexture(yourscore_num_texture);
+            yourscore_num_texture = nullptr;
+        
+
+    SDL_RenderCopy(gRenderer, yourscore_texture, NULL, &yourscore_rect);
+   
+    yourscore_num_texture = gLoader.load_text(Font_PATH, to_string(your_score), gRenderer);
+    yourscore_num_rect = gLoader.create_rect(yourscore_num_texture,HIGH_SCORE_X + yourscore_rect.w + 0.5 , HIGH_SCORE_Y + HIGH_YOUR_SCORE_SPACE);
     SDL_RenderCopy(gRenderer, yourscore_num_texture, NULL, &yourscore_num_rect);
 }
 void show_lose_screen(bool &play_Again){
@@ -291,4 +323,9 @@ void show_lose_screen(bool &play_Again){
         SDL_RenderPresent(gRenderer);
         SDL_Delay(20);
     }
+}
+void show_bonus_score(int x, int y){
+    bonus_score_rect = gLoader.create_rect(bonus_score_texture, x, y);
+    SDL_RenderCopy(gRenderer, bonus_score_texture, NULL, &bonus_score_rect);
+    SDL_Delay(10);
 }

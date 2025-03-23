@@ -19,3 +19,9 @@ bool checkCollision(SDL_Rect player_rect, SDL_Rect enemies_rect){
 //    player_rect.w = player_rect.w * 0.6;
     return SDL_HasIntersection(&player_rect, &enemies_rect);
 }
+bool handle_delay_action(Uint32 start_time, int time){
+    if (SDL_GetTicks() - start_time <= time * 100){
+        return true;
+    }
+    return false;
+}
