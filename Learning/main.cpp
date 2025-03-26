@@ -14,11 +14,13 @@ SDL_Texture* highscore_texture;
 SDL_Texture* yourscore_texture;
 SDL_Texture* yourscore_num_texture;
 SDL_Texture* bonus_score_texture;
+SDL_Texture* high_score_num_texture;
 
 SDL_Rect highscore_rect;
 SDL_Rect yourscore_rect;
 SDL_Rect yourscore_num_rect;
 SDL_Rect bonus_score_rect;
+SDL_Rect high_score_num_rect;
 
 LTexture gLoader;
 
@@ -37,11 +39,12 @@ enemies boost_ene;
 
 int your_score = 0;
 int high_score = 0;
+int MAX_SCORE = 0;
 
 Uint32 handle_bonus_delay_time;
 using namespace std;
 
-int main(){
+int main(int argc, char* argv[]){
     if (!init()){
         cout << "Can't init" << SDL_GetError();
     }
@@ -52,7 +55,6 @@ int main(){
         }
         
         else{
-//            bool play_Again = true;
                 SDL_Event event;
                 bool running = true;
                 Mix_PlayMusic(gMusic, -1);
@@ -116,6 +118,8 @@ int main(){
                         yellow_ene.reset();
                         player.objectRect.x = PLAYER_INIT_X;
                         player.objectRect.y = PLAYER_INIT_Y;
+                        high_score_num_texture = gLoader.load_text(Font_PATH, high_score_num(your_score, MAX_SCORE), gRenderer);
+                        high_score_num_rect = gLoader.create_rect(high_score_num_texture, high_score_num_rect.x, high_score_num_rect.y);
                         your_score = 0;
                     }
                 }
@@ -203,6 +207,9 @@ bool loadmedia(){
     //High score
     highscore_texture = gLoader.load_text(Font_PATH, "High score: ", gRenderer);
     highscore_rect = gLoader.create_rect(highscore_texture, HIGH_SCORE_X, HIGH_SCORE_Y);
+    cout << high_score_num(your_score, MAX_SCORE) << endl;
+    high_score_num_texture = gLoader.load_text(Font_PATH, high_score_num(your_score, MAX_SCORE), gRenderer);
+    high_score_num_rect = gLoader.create_rect(high_score_num_texture, HIGH_SCORE_X + highscore_rect.w + 3, HIGH_SCORE_Y);
     if (highscore_texture == NULL){
         cout << "Failed to load high score texture" << endl;
         success = false;
@@ -280,11 +287,13 @@ void close()
 }
 void draw_high_score(){
     SDL_RenderCopy(gRenderer, highscore_texture, NULL, &highscore_rect);
+    SDL_RenderCopy(gRenderer, high_score_num_texture, NULL, &high_score_num_rect);
 }
 void draw_your_score(int score){
     
-            SDL_DestroyTexture(yourscore_num_texture);
-            yourscore_num_texture = nullptr;
+    SDL_DestroyTexture(yourscore_num_texture);
+    yourscore_num_texture = nullptr;
+
         
 
     SDL_RenderCopy(gRenderer, yourscore_texture, NULL, &yourscore_rect);

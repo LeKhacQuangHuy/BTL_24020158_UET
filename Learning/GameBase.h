@@ -16,12 +16,12 @@
 #include <iostream>
 #include <random>
 #include <vector>
-
+#include <fstream>
 
 
 const int MAX_SCREEN_WEIGHT = 800;
 const int MAX_SCREEN_HEIGHT = 600;
-const int HIGH_SCORE_X = MAX_SCREEN_HEIGHT - 60;
+const int HIGH_SCORE_X = MAX_SCREEN_HEIGHT - 90;
 const int HIGH_SCORE_Y = 50;
 const int HIGH_YOUR_SCORE_SPACE = 50;
 const int PLAYER_INIT_X = MAX_SCREEN_WEIGHT/2 - 148/2;

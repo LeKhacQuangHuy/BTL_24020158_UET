@@ -35,6 +35,7 @@ SDL_Texture* LTexture::load_text(std::string TEXT_PATH, std::string TEXT2LOAD, S
         std::cout << TTF_GetError();
     }
     lTexture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
+    SDL_FreeSurface(textSurface);
     TTF_CloseFont(font);
     return lTexture;
 }

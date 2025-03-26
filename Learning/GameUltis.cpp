@@ -7,6 +7,7 @@
 
 #include "GameUltis.h"
 #include "GameBase.h"
+using namespace std;
 int getRandomNum(int a, int b){
     std::mt19937 mt{std::random_device{}()};
     std::uniform_int_distribution card{a, b};
@@ -25,3 +26,11 @@ bool handle_delay_action(Uint32 start_time, int time){
     }
     return false;
 }
+std::string high_score_num(int new_high_score , int & MAX_SCORE){
+    if (new_high_score > MAX_SCORE){
+        MAX_SCORE = new_high_score;
+    }
+    return to_string(MAX_SCORE);
+}
+
+
