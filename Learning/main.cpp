@@ -121,6 +121,7 @@ int main(int argc, char* argv[]){
                     BLOOD_REMAIN -= 1;
                     blood.blood_handle(BLOOD_REMAIN, gRenderer);
                     if (BLOOD_REMAIN == 0){
+                        lose_animation();
                         show_lose_screen(running);
                         white_ene.reset();
                         //yellow_ene.reset();
@@ -351,3 +352,15 @@ void show_bonus_score(int x, int y){
     SDL_RenderCopy(gRenderer, bonus_score_texture, NULL, &bonus_score_rect);
     SDL_Delay(10);
 }
+void lose_animation(){
+    while (player.objectRect.y < MAX_SCREEN_HEIGHT){
+        player.objectRect.y += 2;
+        SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
+        SDL_RenderClear(gRenderer);
+        SDL_RenderCopy(gRenderer, background_texture, NULL, NULL);
+        SDL_RenderCopy(gRenderer, player.objectTexture, NULL, &player.objectRect);
+        SDL_RenderPresent(gRenderer);
+        SDL_Delay(20);
+    }
+}
+

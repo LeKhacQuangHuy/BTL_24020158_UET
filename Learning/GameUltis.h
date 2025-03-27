@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include "GameBase.h"
 
-static int handle_delay_num = 0;
+//static int handle_delay_num = 0;
 
 bool init();
 bool loadmedia();
@@ -26,5 +26,6 @@ bool checkCollision(SDL_Rect rect_a, SDL_Rect rect_b);
 void show_lose_screen(bool &play_Again);
 void show_bonus_score(int x, int y);
 bool handle_delay_action(Uint32 start_time, int time);
+void lose_animation();
 std::string high_score_num(int new_high_score, int & MAX_SCORE);
 #endif /* GameUltis_h */

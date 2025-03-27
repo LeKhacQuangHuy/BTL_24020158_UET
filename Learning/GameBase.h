@@ -44,5 +44,6 @@ const char BOOST_ENE_PATH[] = "src/boost.png";
 const char WAVE_PATH[] = "src/wave.png";
 const char BLOOD_ON[] = "src/blood_on.png";
 const char BLOOD_OFF[] = "src/blood_off.png";
-
+const char WHITE_ENE_COLL_PATH[] = "sound/white_ene_coll.wav";
+const char YELLOW_ENE_COLL_PATH[] = "sound/yellow_ene_coll.wav";
 #endif /* GameBase_h */
