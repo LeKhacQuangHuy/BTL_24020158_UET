@@ -36,6 +36,7 @@ object example_boost_enemies;
 enemies white_ene;
 enemies yellow_ene;
 enemies boost_ene;
+enemies wave_ene;
 
 int your_score = 0;
 int high_score = 0;
@@ -69,14 +70,17 @@ int main(int argc, char* argv[]){
                     SDL_RenderClear(gRenderer);
                     
                     
-                    
                     SDL_RenderCopy(gRenderer, background_texture, NULL, NULL);
+                    //Render wave
+                    wave_ene.render_wave(gRenderer);
                     
                     //Render highscore
                     draw_high_score();
                     //Render yourscore
                     
                     draw_your_score(your_score);
+                    
+                    
                     
                     //Render player
                     player.update();
@@ -115,7 +119,7 @@ int main(int argc, char* argv[]){
                     else {
                         show_lose_screen(running);
                         white_ene.reset();
-                        yellow_ene.reset();
+//                        yellow_ene.reset();
                         player.objectRect.x = PLAYER_INIT_X;
                         player.objectRect.y = PLAYER_INIT_Y;
                         high_score_num_texture = gLoader.load_text(Font_PATH, high_score_num(your_score, MAX_SCORE), gRenderer);
@@ -254,6 +258,7 @@ bool loadmedia(){
         cout << "Failed to load your boost enemies texture" << IMG_GetError() << endl;
         success = false;
     }
+
     //Bonus
     bonus_score_texture = gLoader.load_text(Font_PATH, "+5", gRenderer);
     if (bonus_score_texture == NULL){

@@ -30,6 +30,7 @@ const int PLAYER_SPEED = 5;
 const int ENEMIES_SPEED = 2;
 const int Enemies_gen_num = 5;
 const int BOOST_ENE_SPEED = 8;
+const int WAVE_SPEED = 3;
 // player_hight = 158, player_width = 148
 
 const char GameName[] = "Learning";

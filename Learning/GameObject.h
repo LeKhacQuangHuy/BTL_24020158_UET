@@ -60,11 +60,35 @@ struct object{
 static std::vector <object> white_enemies;
 static std::vector <object> yellow_enemies;
 static std::vector <object> boost_enemies;
+static std::vector <object> wave_enemies;
 static std::vector <object>::iterator it;
 
 static LTexture lLoader;
 
+
+
 struct enemies{
+    void render_wave(SDL_Renderer* gRenderer){
+        //Thêm hàm reset
+        int init_x = getRandomNum(MAX_SCREEN_WEIGHT + 10, MAX_SCREEN_WEIGHT +20 );
+        int init_y = getRandomNum(MAX_SCREEN_HEIGHT - 110, MAX_SCREEN_HEIGHT);
+        if (getRandomNum(0, 100) == 0){
+            wave_enemies.emplace_back();
+            wave_enemies.back().objectTexture = lLoader.load_pic_from_file("src/wave.png", gRenderer);
+            wave_enemies.back().objectRect = lLoader.create_rect(wave_enemies.back().objectTexture, init_x, init_y);
+        }
+        for (it = wave_enemies.begin(); it != wave_enemies.end();){
+            it->objectRect.x -= WAVE_SPEED;
+            SDL_RenderCopy(gRenderer, it->objectTexture, NULL, &it->objectRect);
+            if (it->objectRect.x < -it->objectRect.w){
+                SDL_DestroyTexture(it->objectTexture);
+                it = wave_enemies.erase(it);
+            }
+            else
+                ++it;
+        }
+    }
+    
     void gen_new_enemies(int num_of_ene, object enemy_type, SDL_Renderer* gRenderer, std::string pic_PATH){
         int init_x = getRandomNum(0, MAX_SCREEN_WEIGHT);
         int init_y = getRandomNum(-50, -5);
@@ -228,9 +252,26 @@ struct enemies{
             SDL_DestroyTexture(it->objectTexture);
             it = boost_enemies.erase(it);
         }
+        for (it = wave_enemies.begin(); it != wave_enemies.end();){
+            SDL_DestroyTexture(it->objectTexture);
+            it = wave_enemies.erase(it);
+        }
+
     }
     
 };
+
+
+//static std::vector <object> blood;
+//
+//void load_blood(){
+//    for (int i = 0; i < 5; ++i){
+//        blood.emplace_back();
+//        blood.back().objectTexture =
+//    }
+//}
+
+
 
 
 
