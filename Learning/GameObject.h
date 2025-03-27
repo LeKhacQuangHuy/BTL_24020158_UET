@@ -163,7 +163,7 @@ struct enemies{
     int handle_yellow_enemies(object player){
         //Yellow
         int res = 0;
-        bool chek1 = false;
+        bool chek1 = false, chek2 = false;
         for (it = yellow_enemies.begin(); it != yellow_enemies.end();){
             it->objectRect.y+=2;   // Chỉnh tốc độ của enemies
             if (it->objectRect.y > MAX_SCREEN_HEIGHT)
@@ -173,12 +173,16 @@ struct enemies{
                 chek1 = true;
             }
             if (checkCollision(player.objectRect, it->objectRect)){
+                SDL_DestroyTexture(it->objectTexture);
+                it = yellow_enemies.erase(it);
+                chek2 = true;
                 res = 1;
             }
-            if (chek1 == false){
+            if (chek1 == false && chek2 == false){
                 ++it;
             }
             chek1 = false;
+            chek2 = false;
         }
         return res;
     }
@@ -262,17 +266,47 @@ struct enemies{
 };
 
 
-//static std::vector <object> blood;
-//
-//void load_blood(){
-//    for (int i = 0; i < 5; ++i){
-//        blood.emplace_back();
-//        blood.back().objectTexture =
-//    }
-//}
+static std::vector <object> blood_enemies;
 
 
+struct blood_object{
+    bool load_blood_on(SDL_Renderer* gRenderer){
+        bool success = true;
+        for (int i = 0; i < 5; ++i){
+            blood_enemies.emplace_back();
+            blood_enemies.back().objectTexture = lLoader.load_pic_from_file(BLOOD_ON, gRenderer);
+            blood_enemies.back().objectRect = lLoader.create_rect(blood_enemies.back().objectTexture, HIGH_SCORE_X + i*30 ,HIGH_SCORE_Y + HIGH_YOUR_SCORE_SPACE*2 );
+            if (blood_enemies.back().objectTexture == NULL){
+                std::cout << "Failed to load blood_on" << std::endl;
+                return false;
+            }
+        }
+        return success;
+    }
+    void blood_handle(int blood_remain, SDL_Renderer* gRenderer){
+        if (blood_remain >= 1){
+            it = blood_enemies.end();
+            (it - (5 - blood_remain))->objectTexture = lLoader.load_pic_from_file(BLOOD_OFF, gRenderer);
+        }
+    }
 
+    void draw_blood(SDL_Renderer* gRenderer){
+        for (it = blood_enemies.begin(); it != blood_enemies.end(); ++it){
+            SDL_RenderCopy(gRenderer, it->objectTexture, NULL, &it->objectRect);
+        }
+    }
+    void reset(SDL_Renderer* gRenderer){
+        for (it = blood_enemies.begin(); it != blood_enemies.end();){
+            SDL_DestroyTexture(it->objectTexture);
+            it = blood_enemies.erase(it);
+        }
+        for (int i = 0; i < 5; ++i){
+            blood_enemies.emplace_back();
+            blood_enemies.back().objectTexture = lLoader.load_pic_from_file(BLOOD_ON, gRenderer);
+            blood_enemies.back().objectRect = lLoader.create_rect(blood_enemies.back().objectTexture, HIGH_SCORE_X + i*30 ,HIGH_SCORE_Y + HIGH_YOUR_SCORE_SPACE*2 );
+        }
+    }
 
+};
 
 #endif /* GameObject_h */

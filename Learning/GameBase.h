@@ -41,6 +41,8 @@ const char WHITE_ENE_PATH[] = "src/white.png";
 const char YELLOW_ENE_PATH[] = "src/yellow.png";
 const char ICON_PATH[] = "src/yellow.png";
 const char BOOST_ENE_PATH[] = "src/boost.png";
-
+const char WAVE_PATH[] = "src/wave.png";
+const char BLOOD_ON[] = "src/blood_on.png";
+const char BLOOD_OFF[] = "src/blood_off.png";
 
 #endif /* GameBase_h */

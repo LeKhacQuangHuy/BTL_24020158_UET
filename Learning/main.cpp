@@ -38,9 +38,11 @@ enemies yellow_ene;
 enemies boost_ene;
 enemies wave_ene;
 
+blood_object blood;
 int your_score = 0;
 int high_score = 0;
 int MAX_SCORE = 0;
+int BLOOD_REMAIN = 5;
 
 Uint32 handle_bonus_delay_time;
 using namespace std;
@@ -56,79 +58,84 @@ int main(int argc, char* argv[]){
         }
         
         else{
-                SDL_Event event;
-                bool running = true;
-                Mix_PlayMusic(gMusic, -1);
-                while (running){
-                    while (SDL_PollEvent(&event)){
-                        if (event.type == SDL_QUIT){
-                            running = false;
-                        }
+            SDL_Event event;
+            bool running = true;
+            Mix_PlayMusic(gMusic, -1);
+            while (running){
+                while (SDL_PollEvent(&event)){
+                    if (event.type == SDL_QUIT){
+                        running = false;
                     }
-                    
-                    SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
-                    SDL_RenderClear(gRenderer);
-                    
-                    
-                    SDL_RenderCopy(gRenderer, background_texture, NULL, NULL);
-                    //Render wave
-                    wave_ene.render_wave(gRenderer);
-                    
+                }
+                
+                SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
+                SDL_RenderClear(gRenderer);
+                
+                
+                SDL_RenderCopy(gRenderer, background_texture, NULL, NULL);
+                //Render wave
+                wave_ene.render_wave(gRenderer);
+                
+                
+                //Render player
+                player.update();
+                SDL_RenderCopyEx(gRenderer, player.objectTexture, NULL, &player.objectRect, 0, NULL, player.flip);
+                //Render white enemies
+                if (getRandomNum(0, 30) == 0){
+                    white_ene.gen_new_enemies(2, example_white_enemies, gRenderer, WHITE_ENE_PATH);
+                }
+                if (white_ene.handle_white_enemies(player) == 1){
+                    your_score += 1;
+                }
+                
+                white_ene.render(example_white_enemies.objectTexture, gRenderer, WHITE_ENE_PATH);
+                //Render boost enemies
+                if (getRandomNum(0, 100) == 0){
+                    boost_ene.gen_new_enemies(3, example_boost_enemies, gRenderer, BOOST_ENE_PATH);
+                }
+                if (boost_ene.handle_boost_enemies(player) == 1){
+                    your_score += 5;
+                    handle_bonus_delay_time = SDL_GetTicks();
+                }
+                if (handle_delay_action(handle_bonus_delay_time, 3) == true){
+                    show_bonus_score(player.objectRect.x, player.objectRect.y);
+                }
+                boost_ene.render(example_boost_enemies.objectTexture, gRenderer, BOOST_ENE_PATH);
+                
+                //Render yellow enemies
+                if (getRandomNum(0, 100) == 0){
+                    yellow_ene.gen_new_enemies(2, example_yellow_enemies, gRenderer, YELLOW_ENE_PATH);
+                }
+                if (yellow_ene.handle_yellow_enemies(player) == 0){
+                    yellow_ene.render(example_white_enemies.objectTexture, gRenderer, YELLOW_ENE_PATH);
                     //Render highscore
                     draw_high_score();
                     //Render yourscore
-                    
                     draw_your_score(your_score);
-                    
-                    
-                    
-                    //Render player
-                    player.update();
-                    SDL_RenderCopyEx(gRenderer, player.objectTexture, NULL, &player.objectRect, 0, NULL, player.flip);
-                    //Render white enemies
-                    if (getRandomNum(0, 30) == 0){
-                        white_ene.gen_new_enemies(2, example_white_enemies, gRenderer, WHITE_ENE_PATH);
-                    }
-                    if (white_ene.handle_white_enemies(player) == 1){
-                        your_score += 1;
-                    }
-                    
-                    white_ene.render(example_white_enemies.objectTexture, gRenderer, WHITE_ENE_PATH);
-                    //Render boost enemies
-                    if (getRandomNum(0, 100) == 0){
-                        boost_ene.gen_new_enemies(3, example_boost_enemies, gRenderer, BOOST_ENE_PATH);
-                    }
-                    if (boost_ene.handle_boost_enemies(player) == 1){
-                        your_score += 5;
-                        handle_bonus_delay_time = SDL_GetTicks();
-                    }
-                    if (handle_delay_action(handle_bonus_delay_time, 3) == true){
-                        show_bonus_score(player.objectRect.x, player.objectRect.y);
-                    }
-                    boost_ene.render(example_boost_enemies.objectTexture, gRenderer, BOOST_ENE_PATH);
-                    
-                    //Render yellow enemies
-                    if (getRandomNum(0, 100) == 0){
-                        yellow_ene.gen_new_enemies(2, example_yellow_enemies, gRenderer, YELLOW_ENE_PATH);
-                    }
-                    if (yellow_ene.handle_yellow_enemies(player) == 0){
-                        yellow_ene.render(example_white_enemies.objectTexture, gRenderer, YELLOW_ENE_PATH);
-                        SDL_RenderPresent(gRenderer);
-                        SDL_Delay(20);
-                    }
-                    else {
+                    //Render blood
+                    blood.draw_blood(gRenderer);
+                    SDL_RenderPresent(gRenderer);
+                    SDL_Delay(20);
+                }
+                else {
+                    BLOOD_REMAIN -= 1;
+                    blood.blood_handle(BLOOD_REMAIN, gRenderer);
+                    if (BLOOD_REMAIN == 0){
                         show_lose_screen(running);
                         white_ene.reset();
-//                        yellow_ene.reset();
+                        //yellow_ene.reset();
                         player.objectRect.x = PLAYER_INIT_X;
                         player.objectRect.y = PLAYER_INIT_Y;
                         high_score_num_texture = gLoader.load_text(Font_PATH, high_score_num(your_score, MAX_SCORE), gRenderer);
                         high_score_num_rect = gLoader.create_rect(high_score_num_texture, high_score_num_rect.x, high_score_num_rect.y);
                         your_score = 0;
+                        BLOOD_REMAIN = 5;
+                        blood.reset(gRenderer);
                     }
                 }
             }
         }
+    }
     close();
         return 0;
     
@@ -206,8 +213,6 @@ bool loadmedia(){
         cout << "Failed to load background music" << Mix_GetError() << endl;
         success = false;
     }
-//    gKeyboard = Mix_LoadWAV("sound/mouse_click.wav");
-//    player.load_audio(gKeyboard);
     //High score
     highscore_texture = gLoader.load_text(Font_PATH, "High score: ", gRenderer);
     highscore_rect = gLoader.create_rect(highscore_texture, HIGH_SCORE_X, HIGH_SCORE_Y);
@@ -224,7 +229,7 @@ bool loadmedia(){
         cout << "Failed to load your score texture" << endl;
         success = false;
     }
-    yourscore_num_texture = gLoader.load_text("font/pixel_font.ttf", to_string(your_score) , gRenderer);
+    yourscore_num_texture = gLoader.load_text(Font_PATH, to_string(your_score) , gRenderer);
     yourscore_rect = gLoader.create_rect(yourscore_texture, HIGH_SCORE_X, HIGH_SCORE_Y + HIGH_YOUR_SCORE_SPACE );
     if (yourscore_texture == NULL){
         cout << "Failed to load your score texture" << endl;
@@ -265,6 +270,11 @@ bool loadmedia(){
         cout << "Failed to load your boost enemies texture" << IMG_GetError() << endl;
         success = false;
     }
+    //Blood
+    if (!blood.load_blood_on(gRenderer)){
+        success = false;
+    }
+    
     return success;
     
 }
