@@ -54,10 +54,12 @@ enemies boost_ene;
 enemies wave_ene;
 
 blood_object blood;
+
 int your_score = 0;
 int high_score = 0;
 int MAX_SCORE = 0;
 int BLOOD_REMAIN = 5;
+bool pause_screen = false;
 
 Button play_btn;
 Button help_btn;
@@ -118,8 +120,52 @@ int main(int argc, char* argv[]){
                     }
                     if (pause_continue_btn.handle_play_btn(event, gRenderer, pause_continue_texture, pause_continue_rect, render_rect_pause_continue)){
                         pause_continue_texture = gLoader.load_pic_from_file(CONTINUE_BTN_PATH, gRenderer);
+                        SDL_RenderCopy(gRenderer, pause_continue_texture, &render_rect_pause_continue, &pause_continue_rect);
+                        pause_screen = true;
                     }
                 }
+                
+                
+                if (pause_screen == true){
+                    while (pause_screen){
+                        while (SDL_PollEvent(&event)){
+                            if (event.type == SDL_QUIT){
+                                running = false;
+                            }
+                            if (pause_continue_btn.handle_play_btn(event, gRenderer, pause_continue_texture, pause_continue_rect, render_rect_pause_continue)){
+                                pause_screen = false;
+                                pause_continue_texture = gLoader.load_pic_from_file(PAUSE_BTN_PATH, gRenderer);
+                            }
+                        }
+                        SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
+                        SDL_RenderClear(gRenderer);
+                        
+                        SDL_RenderCopy(gRenderer, background_texture, NULL, NULL);
+                        //Player
+                        SDL_RenderCopyEx(gRenderer, player.objectTexture, NULL, &player.objectRect, 0, NULL, player.flip);
+                        //White
+                        white_ene.render(example_white_enemies.objectTexture, gRenderer, WHITE_ENE_PATH);
+                        //Boost
+                        boost_ene.render(example_boost_enemies.objectTexture, gRenderer, BOOST_ENE_PATH);
+                        //Yellow
+                        yellow_ene.render(example_white_enemies.objectTexture, gRenderer, YELLOW_ENE_PATH);
+                        //Render highscore
+                        draw_high_score();
+                        //Render yourscore
+                        draw_your_score(your_score);
+                        //Render blood
+                        blood.draw_blood(gRenderer);
+                        //Pause/ continue button
+                        SDL_RenderCopy(gRenderer, pause_continue_texture, &render_rect_pause_continue, &pause_continue_rect);
+                        
+                        
+                        SDL_RenderPresent(gRenderer);
+                        SDL_Delay(20);
+                    }
+                }
+                
+                
+                
                     
                     SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
                     SDL_RenderClear(gRenderer);
