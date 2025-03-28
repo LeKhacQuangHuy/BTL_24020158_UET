@@ -29,14 +29,19 @@ bool handle_delay_action(Uint32 start_time, int time){
 std::string high_score_num(int new_high_score , int & MAX_SCORE){
     ifstream load_data;
     load_data.open("/Users/huylesmacbook/Library/Developer/Xcode/DerivedData/Learning-cdhyvssvqcagzrfkuqtdpvnnerph/Build/Products/Debug/Learning.app/Contents/Resources/saved_high_score.txt");
+    if (!load_data.is_open()){
+        cout << "Failed to load high score";
+    }
     int old_high_score = 0;
     load_data >> old_high_score;
     cout << old_high_score;
+    load_data.close();
     if (MAX_SCORE < old_high_score){
         MAX_SCORE = old_high_score;
     }
     if (new_high_score > MAX_SCORE){
         MAX_SCORE = new_high_score;
+        
     }
     return to_string(MAX_SCORE);
 }

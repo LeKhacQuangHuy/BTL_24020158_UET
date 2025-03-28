@@ -60,7 +60,6 @@ struct object{
 static std::vector <object> white_enemies;
 static std::vector <object> yellow_enemies;
 static std::vector <object> boost_enemies;
-static std::vector <object> wave_enemies;
 static std::vector <object>::iterator it;
 
 static LTexture lLoader;
@@ -68,26 +67,6 @@ static LTexture lLoader;
 
 
 struct enemies{
-    void render_wave(SDL_Renderer* gRenderer){
-        //Thêm hàm reset
-        int init_x = getRandomNum(MAX_SCREEN_WEIGHT + 10, MAX_SCREEN_WEIGHT +20 );
-        int init_y = getRandomNum(MAX_SCREEN_HEIGHT - 110, MAX_SCREEN_HEIGHT);
-        if (getRandomNum(0, 100) == 0){
-            wave_enemies.emplace_back();
-            wave_enemies.back().objectTexture = lLoader.load_pic_from_file("src/wave.png", gRenderer);
-            wave_enemies.back().objectRect = lLoader.create_rect(wave_enemies.back().objectTexture, init_x, init_y);
-        }
-        for (it = wave_enemies.begin(); it != wave_enemies.end();){
-            it->objectRect.x -= WAVE_SPEED;
-            SDL_RenderCopy(gRenderer, it->objectTexture, NULL, &it->objectRect);
-            if (it->objectRect.x < -it->objectRect.w){
-                SDL_DestroyTexture(it->objectTexture);
-                it = wave_enemies.erase(it);
-            }
-            else
-                ++it;
-        }
-    }
     
     void gen_new_enemies(int num_of_ene, object enemy_type, SDL_Renderer* gRenderer, std::string pic_PATH){
         int init_x = getRandomNum(0, MAX_SCREEN_WEIGHT);
@@ -108,6 +87,8 @@ struct enemies{
                     std::cout << "Can't load yellow enemies" << std::endl;
                 }
                 yellow_enemies.back().objectRect = lLoader.create_rect(yellow_enemies.back().objectTexture, init_x, init_y);
+                yellow_enemies.back().objectRect.w *= 1.5;
+                yellow_enemies.back().objectRect.h *= 1.5;
             }
             if (pic_PATH.find("boost") != std::string::npos){
                 boost_enemies.push_back(std::move(enemy_type));
@@ -116,8 +97,8 @@ struct enemies{
                     std::cout << "Can't load boost enemies" << std::endl;
                 }
                 boost_enemies.back().objectRect = lLoader.create_rect(boost_enemies.back().objectTexture, init_x, init_y);
-                boost_enemies.back().objectRect.w *= 0.6;
-                boost_enemies.back().objectRect.h *= 0.6;
+                boost_enemies.back().objectRect.w *= 0.9;
+                boost_enemies.back().objectRect.h *= 0.9;
             }
             
         }
@@ -261,10 +242,6 @@ struct enemies{
             SDL_DestroyTexture(it->objectTexture);
             it = boost_enemies.erase(it);
         }
-        for (it = wave_enemies.begin(); it != wave_enemies.end();){
-            SDL_DestroyTexture(it->objectTexture);
-            it = wave_enemies.erase(it);
-        }
 
     }
     
@@ -281,6 +258,8 @@ struct blood_object{
             blood_enemies.emplace_back();
             blood_enemies.back().objectTexture = lLoader.load_pic_from_file(BLOOD_ON, gRenderer);
             blood_enemies.back().objectRect = lLoader.create_rect(blood_enemies.back().objectTexture, HIGH_SCORE_X + i*30 ,HIGH_SCORE_Y + HIGH_YOUR_SCORE_SPACE*2 );
+            blood_enemies.back().objectRect.w *= 0.5;
+            blood_enemies.back().objectRect.h *= 0.5;
             if (blood_enemies.back().objectTexture == NULL){
                 std::cout << "Failed to load blood_on" << std::endl;
                 return false;
@@ -309,6 +288,8 @@ struct blood_object{
             blood_enemies.emplace_back();
             blood_enemies.back().objectTexture = lLoader.load_pic_from_file(BLOOD_ON, gRenderer);
             blood_enemies.back().objectRect = lLoader.create_rect(blood_enemies.back().objectTexture, HIGH_SCORE_X + i*30 ,HIGH_SCORE_Y + HIGH_YOUR_SCORE_SPACE*2 );
+            blood_enemies.back().objectRect.w *= 0.5;
+            blood_enemies.back().objectRect.h *= 0.5;
         }
     }
 
