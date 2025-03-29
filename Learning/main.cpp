@@ -205,7 +205,7 @@ int main(int argc, char* argv[]){
                     boost_ene.render(example_boost_enemies.objectTexture, gRenderer, BOOST_ENE_PATH);
                     
                     //Render yellow enemies
-                    if (getRandomNum(0, 150) == 0){
+                    if (getRandomNum(0, 100) == 0){
                         yellow_ene.gen_new_enemies(2, example_yellow_enemies, gRenderer, YELLOW_ENE_PATH);
                     }
                     if (yellow_ene.handle_yellow_enemies(player) == 0){
