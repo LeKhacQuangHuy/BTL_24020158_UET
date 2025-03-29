@@ -33,9 +33,9 @@ SDL_Rect play_btn_rect;
 SDL_Rect help_btn_rect;
 SDL_Rect pause_continue_rect;
 SDL_Rect game_paused_rect;
-SDL_Rect render_rect_play = {0, 0, 150, 98};
-SDL_Rect render_rect_help = {0, 0, 150, 98};
-SDL_Rect render_rect_pause_continue = {0, 0, 22, 34};
+SDL_Rect render_rect_play;
+SDL_Rect render_rect_help;
+SDL_Rect render_rect_pause_continue; //= {0, 0, 22, 34};
 
 LTexture gLoader;
 
@@ -247,21 +247,17 @@ int main(int argc, char* argv[]){
     }
 bool init(){
     bool success = true;
-    if ( SDL_Init(SDL_INIT_EVERYTHING) < 0 ) {
+    if (SDL_Init(SDL_INIT_EVERYTHING) < 0 ) {
         std::cout << "SDL Init Error!" << SDL_GetError();
         success = false;
     }
-    if (SDL_Init(SDL_INIT_AUDIO) < 0){
-        cout << "AUDIO INIT ERROR!" << SDL_GetError();
+    
+    int img_flag = IMG_INIT_PNG;
+    if (!(IMG_Init(img_flag) & img_flag)){
+        std::cout << "SDL IMG Init Error!" << SDL_GetError();
+        success = false;
     }
-    else
-    {
-        int img_flag = IMG_INIT_PNG;
-        if (!(IMG_Init(img_flag) & img_flag)){
-            std::cout << "SDL IMG Init Error!" << SDL_GetError();
-            success = false;
-        }
-    }
+    
     gWindow = SDL_CreateWindow(GameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, MAX_SCREEN_WEIGHT, MAX_SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (gWindow == nullptr)
     {
@@ -272,29 +268,21 @@ bool init(){
     SDL_SetWindowIcon(gWindow, icon);
     SDL_FreeSurface(icon);
     gRenderer = SDL_CreateRenderer(gWindow, 0, 0);
+    
     if (gRenderer == nullptr)
     {
         cout << "Can't create renderer" << SDL_GetError();
         success = false;
-    } else
-        {
-        //Initialize renderer color
-        SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-
-        //Initialize PNG loading
-        int imgFlags = IMG_INIT_PNG;
+    }
         
-            if (TTF_Init() < 0){
-                cout << "Could not initalize text" << TTF_GetError();
-                success = false;
-            }
-            
-            if( !( IMG_Init( imgFlags ) & imgFlags ) )
-                {
-                printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
-                success = false;
-                }
-        }
+    //Initialize renderer color
+    SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+
+    if (TTF_Init() < 0){
+        cout << "Could not initalize text" << TTF_GetError();
+        success = false;
+    }
+
 
     return success;
 }
@@ -308,7 +296,7 @@ bool loadmedia(){
     background_texture = gLoader.load_pic_from_file(GameBackground_PATH, gRenderer);
     if(background_texture == NULL )
     {
-        printf( "Failed to load texture image!\n" );
+        cout <<  "Failed to load texture image!" << endl;
         success = false;
     }
     //Load menu background
@@ -322,7 +310,7 @@ bool loadmedia(){
     play_again_texture = gLoader.load_pic_from_file(Play_againBackground_PATH, gRenderer);
     if(play_again_texture == NULL )
     {
-        printf( "Failed to load play again background image!\n" );
+        cout <<  "Failed to load texture menu image!" << endl;
         success = false;
     }
     //Audio
@@ -412,8 +400,16 @@ bool loadmedia(){
     //Play button
     play_btn_texture = gLoader.load_pic_from_file(PLAY_BTN_PATH, gRenderer);
     play_btn_rect = gLoader.create_rect(play_btn_texture, MAX_SCREEN_WEIGHT - 280, 250);
+    
+    render_rect_play.x = 0;
+    render_rect_play.y = 0;
+    render_rect_play.w = (play_btn_rect.w)/2;
+    render_rect_play.h = play_btn_rect.h;
+    
     play_btn_rect.w *= 0.6;
     play_btn_rect.h *= 0.6;
+    
+
     if (play_btn_texture == NULL){
         cout << "Failed to load your play button texture" << IMG_GetError() << endl;
         success = false;
@@ -421,8 +417,16 @@ bool loadmedia(){
     //Help button
     help_btn_texture = gLoader.load_pic_from_file(HELP_BTN_PATH, gRenderer);
     help_btn_rect = gLoader.create_rect(help_btn_texture, MAX_SCREEN_WEIGHT - 280, 320);
+
+    render_rect_help.x = 0;
+    render_rect_help.y = 0;
+    render_rect_help.w = (help_btn_rect.w)/2;
+    render_rect_help.h = help_btn_rect.h;
+    
     help_btn_rect.w *= 0.6;
     help_btn_rect.h *= 0.6;
+
+
     if (help_btn_texture == NULL){
         cout << "Failed to load your help button texture" << IMG_GetError() << endl;
         success = false;
@@ -434,11 +438,18 @@ bool loadmedia(){
         cout << "Failed to load your pause/continue button texture" << IMG_GetError() << endl;
         success = false;
     }
+    //Pause continue render rect
+    render_rect_pause_continue = {0,0, pause_continue_rect.w / 2, pause_continue_rect.h};
+    
     //Game paused text
     game_paused_texture = gLoader.load_text(Font_PATH, "Game paused!", gRenderer);
     game_paused_rect = gLoader.create_rect(game_paused_texture, 0, 0);
     game_paused_rect.y = MAX_SCREEN_HEIGHT/2 - game_paused_rect.h;
     game_paused_rect.x = MAX_SCREEN_WEIGHT/2 - game_paused_rect.w/2;
+    
+    
+    
+    
     return success;
     
 }
