@@ -33,7 +33,7 @@ const int BOOST_ENE_SPEED = 8;
 const int WAVE_SPEED = 3;
 // player_hight = 158, player_width = 148
 
-const char GameName[] = "Learning";
+const char GameName[] = "Claim your efforts";
 const char GameBackground_PATH[] = "src/background.png";
 const char MenuBackground_PATH[] = "src/menu_background.png";
 const char MenuInstruction_PATH[] = "src/instruction.png";

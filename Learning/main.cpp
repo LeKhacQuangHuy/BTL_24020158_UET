@@ -130,7 +130,8 @@ int main(int argc, char* argv[]){
                     while (pause_screen){
                         while (SDL_PollEvent(&event)){
                             if (event.type == SDL_QUIT){
-                                running = false;
+                                close();
+                                return 0;
                             }
                             if (pause_continue_btn.handle_play_btn(event, gRenderer, pause_continue_texture, pause_continue_rect, render_rect_pause_continue)){
                                 pause_screen = false;

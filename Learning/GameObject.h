@@ -30,14 +30,23 @@ struct object{
     }
 
     void move_right(){
-        if (keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D]){
+        if (keystate[SDL_SCANCODE_RIGHT]){
             objectRect.x += PLAYER_SPEED;
             flip = SDL_FLIP_NONE;
             
         }
+        if (keystate[SDL_SCANCODE_D]){
+            objectRect.x += PLAYER_SPEED;
+            flip = SDL_FLIP_NONE;
+        }
     }
     void move_left(){
-        if (keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A]){
+        if (keystate[SDL_SCANCODE_LEFT]){
+            objectRect.x -= PLAYER_SPEED;
+            flip = SDL_FLIP_HORIZONTAL;
+            
+        }
+        if ( keystate[SDL_SCANCODE_A]){
             objectRect.x -= PLAYER_SPEED;
             flip = SDL_FLIP_HORIZONTAL;
             
