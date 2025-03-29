@@ -15,6 +15,7 @@
 //#include "main.h"
 
 static Mix_Chunk* lChunk = nullptr;
+static Mix_Chunk* lChunk_bonus = nullptr;
 
 struct object{
     const Uint8 * keystate = SDL_GetKeyboardState(nullptr);
@@ -197,12 +198,12 @@ struct enemies{
             
             if (checkCollision(player.objectRect, it->objectRect)){
                 res = 1;
-                Mix_FreeChunk(lChunk);
-                lChunk = Mix_LoadWAV("sound/bonus_sound.wav");
-                if (lChunk == NULL){
-                    std::cout << "Failed to load chunk sound";
+                Mix_FreeChunk(lChunk_bonus);
+                lChunk_bonus = Mix_LoadWAV("sound/bonus_sound.wav");
+                if (lChunk_bonus == NULL){
+                    std::cout << "Failed to load bonus chunk sound";
                 }
-                Mix_PlayChannel(0, lChunk, 0);
+                Mix_PlayChannel(0, lChunk_bonus, 0);
                 SDL_DestroyTexture(it->objectTexture);
                 it = boost_enemies.erase(it);
                 chek2 = true;

@@ -21,6 +21,7 @@ SDL_Texture* play_btn_texture;
 SDL_Texture* help_btn_texture;
 SDL_Texture* play_again_texture;
 SDL_Texture* pause_continue_texture;
+SDL_Texture* game_paused_texture;
 
 SDL_Rect highscore_rect;
 SDL_Rect menu_background_rect;
@@ -31,6 +32,7 @@ SDL_Rect high_score_num_rect;
 SDL_Rect play_btn_rect;
 SDL_Rect help_btn_rect;
 SDL_Rect pause_continue_rect;
+SDL_Rect game_paused_rect;
 SDL_Rect render_rect_play = {0, 0, 150, 98};
 SDL_Rect render_rect_help = {0, 0, 150, 98};
 SDL_Rect render_rect_pause_continue = {0, 0, 22, 34};
@@ -127,6 +129,7 @@ int main(int argc, char* argv[]){
                 
                 
                 if (pause_screen == true){
+                    Mix_HaltMusic();
                     while (pause_screen){
                         while (SDL_PollEvent(&event)){
                             if (event.type == SDL_QUIT){
@@ -135,6 +138,7 @@ int main(int argc, char* argv[]){
                             }
                             if (pause_continue_btn.handle_play_btn(event, gRenderer, pause_continue_texture, pause_continue_rect, render_rect_pause_continue)){
                                 pause_screen = false;
+                                Mix_PlayMusic(gMusic, -1);
                                 pause_continue_texture = gLoader.load_pic_from_file(PAUSE_BTN_PATH, gRenderer);
                             }
                         }
@@ -159,6 +163,7 @@ int main(int argc, char* argv[]){
                         //Pause/ continue button
                         SDL_RenderCopy(gRenderer, pause_continue_texture, &render_rect_pause_continue, &pause_continue_rect);
                         
+                        SDL_RenderCopy(gRenderer, game_paused_texture, NULL , &game_paused_rect);
                         
                         SDL_RenderPresent(gRenderer);
                         SDL_Delay(20);
@@ -429,6 +434,11 @@ bool loadmedia(){
         cout << "Failed to load your pause/continue button texture" << IMG_GetError() << endl;
         success = false;
     }
+    //Game paused text
+    game_paused_texture = gLoader.load_text(Font_PATH, "Game paused!", gRenderer);
+    game_paused_rect = gLoader.create_rect(game_paused_texture, 0, 0);
+    game_paused_rect.y = MAX_SCREEN_HEIGHT/2 - game_paused_rect.h;
+    game_paused_rect.x = MAX_SCREEN_WEIGHT/2 - game_paused_rect.w/2;
     return success;
     
 }
