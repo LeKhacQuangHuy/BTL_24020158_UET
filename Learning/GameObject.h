@@ -17,6 +17,7 @@
 static Mix_Chunk* lChunk = nullptr;
 static Mix_Chunk* lChunk_bonus = nullptr;
 
+
 struct object{
     const Uint8 * keystate = SDL_GetKeyboardState(nullptr);
     int x = 0,y = 0;

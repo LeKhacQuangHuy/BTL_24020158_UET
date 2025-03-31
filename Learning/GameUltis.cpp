@@ -43,9 +43,6 @@ std::string high_score_num(int new_high_score , int & MAX_SCORE){
         
         load_data.open("/Users/huylesmacbook/Library/Developer/Xcode/DerivedData/Learning-cdhyvssvqcagzrfkuqtdpvnnerph/Build/Products/Debug/Learning.app/Contents/Resources/saved_high_score.txt", std::ios::out);
         
-        if (!load_data.is_open()){
-            cout << "Failed to ext high score";
-        }
         load_data << to_string(new_high_score);
         MAX_SCORE = new_high_score;
     }

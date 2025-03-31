@@ -18,7 +18,6 @@
 #include <vector>
 #include <fstream>
 
-
 const int MAX_SCREEN_WEIGHT = 800;
 const int MAX_SCREEN_HEIGHT = 600;
 const int HIGH_SCORE_X = MAX_SCREEN_HEIGHT - 90;
@@ -26,11 +25,12 @@ const int HIGH_SCORE_Y = 50;
 const int HIGH_YOUR_SCORE_SPACE = 50;
 const int PLAYER_INIT_X = MAX_SCREEN_WEIGHT/2 - 148/2;
 const int PLAYER_INIT_Y = MAX_SCREEN_HEIGHT - 145 - 158/2 + 5;
+
+//Handle speed
 const int PLAYER_SPEED = 5;
 const int ENEMIES_SPEED = 2;
-const int Enemies_gen_num = 5;
 const int BOOST_ENE_SPEED = 8;
-const int WAVE_SPEED = 3;
+
 // player_hight = 158, player_width = 148
 
 const char GameName[] = "Claim your efforts";

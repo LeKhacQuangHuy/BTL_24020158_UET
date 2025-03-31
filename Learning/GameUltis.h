@@ -27,5 +27,7 @@ void show_lose_screen(bool &play_Again);
 void show_bonus_score(int x, int y);
 bool handle_delay_action(Uint32 start_time, int time);
 void lose_animation();
+void level_up_animation();
 std::string high_score_num(int new_high_score, int & MAX_SCORE);
+
 #endif /* GameUltis_h */

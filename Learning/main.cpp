@@ -22,6 +22,7 @@ SDL_Texture* help_btn_texture;
 SDL_Texture* play_again_texture;
 SDL_Texture* pause_continue_texture;
 SDL_Texture* game_paused_texture;
+SDL_Texture* level_up_texture;
 
 SDL_Rect highscore_rect;
 SDL_Rect menu_background_rect;
@@ -33,6 +34,7 @@ SDL_Rect play_btn_rect;
 SDL_Rect help_btn_rect;
 SDL_Rect pause_continue_rect;
 SDL_Rect game_paused_rect;
+SDL_Rect level_up_rect;
 SDL_Rect render_rect_play;
 SDL_Rect render_rect_help;
 SDL_Rect render_rect_pause_continue; //= {0, 0, 22, 34};
@@ -60,7 +62,17 @@ blood_object blood;
 int your_score = 0;
 int high_score = 0;
 int MAX_SCORE = 0;
+
+int white_ene_spam_rate = 30;
+int yellow_ene_spam_rate = 100;
+int boost_ene_spam_rate = 100;
 int BLOOD_REMAIN = 5;
+
+int yellow_enemies_gen_num = 2;
+int white_enemies_gen_num = 2;
+int boost_enemies_gen_num = 2;
+
+
 bool pause_screen = false;
 
 Button play_btn;
@@ -68,6 +80,8 @@ Button help_btn;
 Button pause_continue_btn;
 
 Uint32 handle_bonus_delay_time;
+Uint32 handle_level_up_delay_time;
+
 using namespace std;
 
 int main(int argc, char* argv[]){
@@ -183,21 +197,35 @@ int main(int argc, char* argv[]){
                     player.update();
                     SDL_RenderCopyEx(gRenderer, player.objectTexture, NULL, &player.objectRect, 0, NULL, player.flip);
                     //Render white enemies
-                    if (getRandomNum(0, 30) == 0){
-                        white_ene.gen_new_enemies(2, example_white_enemies, gRenderer, WHITE_ENE_PATH);
+                if (getRandomNum(0, white_ene_spam_rate) == 0){
+                        white_ene.gen_new_enemies(white_enemies_gen_num, example_white_enemies, gRenderer, WHITE_ENE_PATH);
                     }
                     if (white_ene.handle_white_enemies(player) == 1){
                         your_score += 1;
+                        if (your_score % 20 == 0 && your_score!=0){
+                            level_up_animation();
+                            handle_level_up_delay_time = SDL_GetTicks();
+                        }
+//                        if (your_score == 20 * level_up_score_handle){
+//                            level_up_animation();
+//                            handle_level_up_delay_time = SDL_GetTicks();
+//                        }
+                        
+                        
                     }
-                    
                     white_ene.render(example_white_enemies.objectTexture, gRenderer, WHITE_ENE_PATH);
                     //Render boost enemies
-                    if (getRandomNum(0, 100) == 0){
-                        boost_ene.gen_new_enemies(3, example_boost_enemies, gRenderer, BOOST_ENE_PATH);
+                if (getRandomNum(0, boost_ene_spam_rate) == 0){
+                        boost_ene.gen_new_enemies(boost_enemies_gen_num, example_boost_enemies, gRenderer, BOOST_ENE_PATH);
                     }
                     if (boost_ene.handle_boost_enemies(player) == 1){
                         your_score += 5;
                         handle_bonus_delay_time = SDL_GetTicks();
+                        if ((your_score % 20 == 0 || (your_score - 1) % 20 == 0 || (your_score - 2) % 20 == 0 || (your_score - 3) % 20  == 0 || (your_score - 4) % 20 == 0) && your_score!=0){
+                            level_up_animation();
+                            handle_level_up_delay_time = SDL_GetTicks();
+                        }
+                        
                     }
                     if (handle_delay_action(handle_bonus_delay_time, 3) == true){
                         show_bonus_score(player.objectRect.x, player.objectRect.y);
@@ -205,8 +233,8 @@ int main(int argc, char* argv[]){
                     boost_ene.render(example_boost_enemies.objectTexture, gRenderer, BOOST_ENE_PATH);
                     
                     //Render yellow enemies
-                    if (getRandomNum(0, 100) == 0){
-                        yellow_ene.gen_new_enemies(2, example_yellow_enemies, gRenderer, YELLOW_ENE_PATH);
+                if (getRandomNum(0, yellow_ene_spam_rate) == 0){
+                        yellow_ene.gen_new_enemies(yellow_enemies_gen_num, example_yellow_enemies, gRenderer, YELLOW_ENE_PATH);
                     }
                     if (yellow_ene.handle_yellow_enemies(player) == 0){
                         yellow_ene.render(example_white_enemies.objectTexture, gRenderer, YELLOW_ENE_PATH);
@@ -218,8 +246,15 @@ int main(int argc, char* argv[]){
                         blood.draw_blood(gRenderer);
                         //Pause/ continue button
                         SDL_RenderCopy(gRenderer, pause_continue_texture, &render_rect_pause_continue, &pause_continue_rect);
+                        
+                        
+                        if (handle_delay_action(handle_level_up_delay_time, 8) == true){
+                            SDL_RenderCopy(gRenderer, level_up_texture , NULL, &level_up_rect);
+                        }
                         SDL_RenderPresent(gRenderer);
                         SDL_Delay(20);
+                        
+                        
                     }
                     else {
                         BLOOD_REMAIN -= 1;
@@ -229,14 +264,18 @@ int main(int argc, char* argv[]){
                             lose_animation();
                             show_lose_screen(running);
                             white_ene.reset();
-                            //yellow_ene.reset();
+                            //player posision reset
                             player.objectRect.x = PLAYER_INIT_X;
                             player.objectRect.y = PLAYER_INIT_Y;
+                            //level reset
+                            yellow_ene_spam_rate = 100;
+                            yellow_enemies_gen_num = 2;
                             high_score_num_texture = gLoader.load_text(Font_PATH, high_score_num(your_score, MAX_SCORE), gRenderer);
                             high_score_num_rect = gLoader.create_rect(high_score_num_texture, high_score_num_rect.x, high_score_num_rect.y);
                             your_score = 0;
                             BLOOD_REMAIN = 5;
                             blood.reset(gRenderer);
+                            
                         }
                     }
                 }
@@ -469,6 +508,7 @@ void close()
     SDL_DestroyTexture(play_btn_texture);
     SDL_DestroyTexture(help_btn_texture);
     SDL_DestroyTexture(pause_continue_texture);
+    SDL_DestroyTexture(level_up_texture);
     //Destroy window
     SDL_DestroyRenderer( gRenderer );
     SDL_DestroyWindow( gWindow );
@@ -527,7 +567,6 @@ void show_lose_screen(bool &play_Again){
 void show_bonus_score(int x, int y){
     bonus_score_rect = gLoader.create_rect(bonus_score_texture, x, y);
     SDL_RenderCopy(gRenderer, bonus_score_texture, NULL, &bonus_score_rect);
-    SDL_Delay(10);
 }
 void lose_animation(){
     while (player.objectRect.y < MAX_SCREEN_HEIGHT){
@@ -540,4 +579,17 @@ void lose_animation(){
         SDL_Delay(20);
     }
 }
+void level_up_animation(){
 
+    level_up_texture = gLoader.load_text(Font_PATH, "Level up !", gRenderer);
+    level_up_rect = gLoader.create_rect(level_up_texture, MAX_SCREEN_WEIGHT/2, MAX_SCREEN_HEIGHT/2);
+    
+    level_up_rect.x -= level_up_rect.w/2;
+    level_up_rect.y -= level_up_rect.h/2;
+        
+
+    yellow_enemies_gen_num += 5;
+    if (yellow_ene_spam_rate > 0){
+        yellow_ene_spam_rate -= 15;
+    }
+}
