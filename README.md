@@ -1,5 +1,8 @@
 # Claim Your Efforts
 
+Tên sinh viên: Lê Khắc Quang Huy <br>
+Lớp: K69I-IT5 <br>
+
 ## Giới thiệu
 **Claim Your Efforts** là một trò chơi được phát triển bằng C++ và SDL2, lấy cảm hứng từ *Open Window - Don't Eat the Yellow Snow! - Part 1*. Trò chơi mang đến trải nghiệm thú vị với cơ chế thu thập vật phẩm, né tránh chướng ngại vật và tăng dần độ khó theo điểm số.
 
@@ -24,7 +27,7 @@
 ### Yêu cầu
 - **Hệ điều hành:** macOS
 - **Thư viện cần thiết:** SDL2, SDL2_image, SDL2_ttf, SDL2_mixer
-
+## Lưu ý: Tắt các bộ gõ tiếng Việt khi chơi
 
 
 
